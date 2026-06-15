@@ -191,6 +191,8 @@ git merge --abort
 \end{lstlisting}
 
 
+Lorsque vous faites un \texttt{git pull} toutes les branches sont téléchargées (correspond aussi à \texttt{git fetch} ) mais seule la branche sur laquelle vous êtes est fusionnée avec celle distante (correspond aussi à \texttt{git merge} ). Ainsi si vous avez plusieurs branches liées à des branches distantes, celles ci ne sont fusionnée. Veuillez refaire un \texttt{git pull} sur chaque branche que vous voulez. Si le dépôt contient des branches que vous n'avez pas en local elle seront cachées, vous pourrez en voir la liste via \texttt{git branch -a}, elles apparaitrons sous la forme \texttt{remotes/origin/NomBranche} 
+
 \subsection*{Mettre à jour sa branche par rapport au main}
 Avant de demander au responsable de fusionner votre travail dans le \texttt{main}, vous devez vous assurer que votre branche intègre les dernières nouveautés du projet. Pour cela, utilisez cette commande depuis votre branche :
 \begin{lstlisting}[style=bashstyle]
