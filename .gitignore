@@ -13,6 +13,7 @@
 !*.md
 !*.txt
 !*.m
+!.bib 
 
 # 5. COMPATIBILITE IMAGES : On autorise tout le contenu du dossier images
 !**/images/**
