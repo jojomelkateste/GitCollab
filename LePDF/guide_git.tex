@@ -72,20 +72,25 @@
 %-------------------------------------------------------------------
 \section{Configuration initiale (une seule fois par machine)}
 
+Dans ces exemple l'option \texttt{--global} sert à ne pas avoir à configurer ces parametres individuellement pour chaque nouveau depot Git que vous creez sur votre ordinateur. En l'utilisant, ces reglages s'appliquent une bonne fois pour toutes a l'echelle de votre ordinateur. A l'inverse, l'option \texttt{--local} limite la configuration au seul dossier de travail actuel.
 \begin{lstlisting}[style=bashstyle]
 git config --global user.name "Prenom Nom"
 git config --global user.email "votre.email@labo.fr"
 
 
 # Pour prevenir certains problemes en cas d'oublie
-git config --global pull.rebase true
+git config --local pull.rebase true
 
 # Editeur utilise pour les messages de commit (optionnel)
-git config --global core.editor "nano"
+git config --local core.editor "nano"
 
 # Recommande : evite les soucis de fins de ligne Windows/Linux
 git config --global core.autocrlf input   # sous Linux/Mac
 git config --global core.autocrlf true    # sous Windows
+
+# A faire quand vous creer un git pour la premiere fois
+cd dossier
+git init -b main #option 
 \end{lstlisting}
 
 %-------------------------------------------------------------------
@@ -151,7 +156,7 @@ Voici les commandes essentielles pour gérer vos branches au quotidien :
 \begin{lstlisting}[style=bashstyle]
 # 1. Creer une nouvelle branche et basculer dessus
 git branch nom-ma-branche # branche cree 
-git switch  nom-ma-branche
+git switch  nom-ma-branche # on y bascule
 # Ou directement 
 git switch -c nom-ma-branche
 # L'option "-c" signifie "create". 
@@ -290,8 +295,66 @@ Créer un fichier \texttt{.gitignore} à la racine du projet :
 .DS_Store
 \end{lstlisting}
 
+Ou plus radical 
+\begin{lstlisting}[style=plainstyle]
+# 1. On ignore absolument tout le contenu du depot
+*
+
+# 2. On autorise quand meme a l'interieur des dossiers (sinon Git ne cherche pas plus loin)
+!*/
+
+# 3. On ne veut pas ignorer le fichier .gitignore lui-meme
+!.gitignore
+
+# 4. On conserve uniquement les fichiers .tex .md .txt ...
+!*.tex
+!*.md
+!*.txt
+
+# 5. COMPATIBILITE IMAGES : On autorise tout le contenu du dossier images
+!images/**
+\end{lstlisting}
+
+
 \textbf{Discussion à avoir en équipe} : faut-il versionner le PDF final~? Souvent non (il est régénéré à la compilation et change à chaque fois, ce qui garantit des conflits sur fichier binaire). Si vous voulez partager un PDF de référence, préférez un espace partagé séparé (Drive, Overleaf, etc.).
 
+\subsection{Gérer les images et fichiers lourds avec Git LFS}
+
+Par défaut, Git n'est pas conçu pour gérer les gros fichiers binaires (images PNG/JPG, schémas vectoriels PDF). À chaque modification d'une image, Git stocke l'intégralité du nouveau fichier dans son historique, ce qui fait rapidement exploser la taille du dépôt et ralentit considérablement les commandes \texttt{git pull} et \texttt{git push}.
+
+Pour résoudre ce problème sans ignorer nos images (dont nous avons besoin pour compiler le document), nous utilisons \textbf{Git LFS} (Large File Storage). Git LFS remplace les gros fichiers du dépôt par de légers fichiers texte contenant des pointeurs, et télécharge les vraies images uniquement quand c'est nécessaire.
+
+\subsubsection*{1. Installation de Git LFS}
+Chaque membre de l'équipe doit installer Git LFS sur sa machine \textbf{une seule fois} :
+\begin{itemize}
+	\item \textbf{Sur Windows :} Téléchargez et exécutez l'installateur officiel depuis \url{https://git-lfs.com} (ou via \texttt{winget install github.git-lfs}).
+	\item \textbf{Sur Linux (Ubuntu/Debian) :} Exécutez la commande : \texttt{sudo apt install git-lfs}.
+\end{itemize}
+Une fois installé, ouvrez votre terminal et activez-le globalement avec :
+\begin{lstlisting}[style=bashstyle]
+	git lfs install
+\end{lstlisting}
+
+\subsubsection*{2. Suivre les formats d'images}
+À la racine du projet, configurez les extensions de fichiers que Git LFS doit prendre en charge (à ne faire qu'une seule fois pour le projet) :
+\begin{lstlisting}[style=bashstyle]
+# Suivre toutes les images du projet
+git lfs track "*.png"
+git lfs track "*.jpg"
+git lfs track "*.jpeg"
+git lfs track "*.svg"
+git lfs track "*.tif
+# Eviter de suivre les images pdf avec *.pdf car sera suivit aussi le pdf du projet dans ses nombreuses version A la place mettre plustot: 
+# Suivre toutes les images et fichiers du dossier "images"
+git lfs track "images/**"
+
+# IMPORTANT : Enregistrer la configuration dans le depot
+git add .gitattributes
+git commit -m "Configure Git LFS pour les images"
+\end{lstlisting}
+Désormais, vous pouvez ajouter vos images normalement avec \texttt{git add}, Git LFS s'occupera du reste de manière transparente.
+
+\textbf{Attention} ne pas ignorer les fichiers 
 %-------------------------------------------------------------------
 \section{Prévenir les conflits~: checklist}
 
