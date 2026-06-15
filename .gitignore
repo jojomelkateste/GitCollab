@@ -10,6 +10,9 @@
 
 # 4. On conserve uniquement les fichiers .tex
 !*.tex
+!*.md
+!*.txt
+!*.m
 
 # 5. COMPATIBILITE IMAGES : On autorise tout le contenu du dossier images
 !**/images/**
