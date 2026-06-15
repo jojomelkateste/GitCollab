@@ -305,14 +305,17 @@ Ou plus radical
 
 # 3. On ne veut pas ignorer le fichier .gitignore lui-meme
 !.gitignore
+!.gitatributes
 
 # 4. On conserve uniquement les fichiers .tex .md .txt ...
 !*.tex
 !*.md
 !*.txt
 
-# 5. COMPATIBILITE IMAGES : On autorise tout le contenu du dossier images
-!images/**
+# 5. COMPATIBILITE IMAGES : On autorise tout le contenu des dossiers nommee images
+!**/images/**
+!**/Images/**
+!**/image/**
 \end{lstlisting}
 
 
@@ -343,10 +346,10 @@ git lfs track "*.png"
 git lfs track "*.jpg"
 git lfs track "*.jpeg"
 git lfs track "*.svg"
-git lfs track "*.tif
+git lfs track "*.tif"
 # Eviter de suivre les images pdf avec *.pdf car sera suivit aussi le pdf du projet dans ses nombreuses version A la place mettre plustot: 
 # Suivre toutes les images et fichiers du dossier "images"
-git lfs track "images/**"
+git lfs track "images/*.pdf"
 
 # IMPORTANT : Enregistrer la configuration dans le depot
 git add .gitattributes

@@ -6,6 +6,10 @@
 
 # 3. On ne veut pas ignorer le fichier .gitignore lui-même
 !.gitignore
+!.gitattributes
 
 # 4. On conserve uniquement les fichiers .tex
 !*.tex
+
+# 5. COMPATIBILITE IMAGES : On autorise tout le contenu du dossier images
+!**/images/**
