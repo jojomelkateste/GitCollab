@@ -203,6 +203,13 @@ git pull origin main --rebase
 \end{lstlisting}
 Si un conflit apparaît à ce moment-là, résolvez-le tranquillement sur votre machine avant de prévenir le responsable.
 
+Le main est protégé de mon coté, j'ai configuré github pour n'accepter les push dessus que de la part de moi même. Si par accident vous avez modifié la branche main et voulais dire a git: "oublie tout, ce qui fait fois c'est ce qui est sur le distant" alors on fait. 
+
+\begin{lstlisting}[style=bashstyle]
+git fetch origin
+git reset --hard origin/main
+git clean -fd
+\end{lstlisting}
 %-------------------------------------------------------------------
 %-------------------------------------------------------------------
 \section{Le cycle de travail quotidien}
