@@ -699,14 +699,14 @@ latexdiff ancienne_version.tex nouvelle_version.tex > diff.tex
 %-------------------------------------------------------------------
 \section{Petit exercice pour la formation}
 
-Pour illustrer un conflit en conditions réelles, deux personnes peuvent~:
+Crée 
 
 \begin{enumerate}
-  \item Cloner le même dépôt de test.
-  \item Sans faire \texttt{git pull} entre les deux, modifier \textbf{la même ligne} d'un fichier \texttt{.tex} (par exemple une phrase de l'introduction), chacun de son côté.
-  \item La première personne fait \texttt{git add}, \texttt{git commit}, \texttt{git push} sans problème.
-  \item La seconde personne fait \texttt{git add}, \texttt{git commit}, puis \texttt{git pull} $\rightarrow$ un conflit apparaît.
-  \item Résoudre le conflit en suivant la section~\ref{sec:resoudre}, puis \texttt{git push}.
+\item Crée une clef ssh : \verb|ssh-keygen -t ed25519 -C "ton_email@exemple.com"| regardez la ou est la clef est afficher la. exemple \verb|cat /c/Users/melka/.ssh/id_ed25519.pub| me la transmettre pour vous autoriser à cloner le dépôt. 
+
+  \item Aller dans un dossier et cloner le projet \verb|git clone git@github.com:jojomelkateste/GitCollab.git|
+  
+  \item Créé vous une branche et travailler dessus pour tout tester. 
 \end{enumerate}
 
 Cet exercice « à blanc » permet de dérouler une fois la procédure complète dans un cadre sans enjeu, avant de l'appliquer sur le vrai projet.
