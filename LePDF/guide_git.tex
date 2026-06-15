@@ -1,0 +1,527 @@
+\documentclass[11pt,a4paper]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[french]{babel}
+\usepackage[margin=2.5cm]{geometry}
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{enumitem}
+\usepackage{hyperref}
+
+\hypersetup{
+  colorlinks=true,
+  linkcolor=blue!50!black,
+  urlcolor=blue!50!black
+}
+
+\lstdefinestyle{bashstyle}{
+  language=bash,
+  basicstyle=\ttfamily\small,
+  keywordstyle=\color{blue!60!black},
+  commentstyle=\color{gray}\itshape,
+  stringstyle=\color{purple},
+  backgroundcolor=\color{black!4},
+  frame=single,
+  rulecolor=\color{black!30},
+  breaklines=true,
+  columns=fullflexible,
+  showstringspaces=false,
+  xleftmargin=2pt,
+  framexleftmargin=5pt
+}
+
+\lstdefinestyle{plainstyle}{
+  basicstyle=\ttfamily\small,
+  backgroundcolor=\color{black!4},
+  frame=single,
+  rulecolor=\color{black!30},
+  breaklines=true,
+  columns=fullflexible,
+  showstringspaces=false,
+  xleftmargin=2pt,
+  framexleftmargin=5pt
+}
+
+\title{Guide Git\\\large Travail collaboratif sur un projet LaTeX}
+\author{}
+\date{}
+
+\begin{document}
+
+\maketitle
+\tableofcontents
+
+%-------------------------------------------------------------------
+\section{Vocabulaire de base}
+
+\begin{description}[style=nextline, leftmargin=1cm]
+  \item[Dépôt (repository)] Le projet suivi par Git, avec tout son historique.
+  \item[Commit] Une « photo » de l'état du projet à un instant donné, avec un message descriptif.
+  \item[Branche (branch)] Une ligne de développement indépendante (souvent \texttt{main} pour la version de référence).
+  \item[Remote] La copie du dépôt hébergée sur un serveur (GitHub, GitLab, Overleaf...).
+  \item[\texttt{origin}] Nom par défaut donné au remote principal.
+  \item[Working directory] Les fichiers tels que vous les voyez sur votre disque.
+  \item[Staging area / index] La « salle d'attente » où l'on dépose les modifications avant de les valider par un commit.
+  \item[HEAD] Pointeur vers le commit actuel de votre branche.
+  \item[Conflit (conflict)] Situation où Git ne sait pas comment fusionner automatiquement deux modifications concurrentes.
+\end{description}
+
+%-------------------------------------------------------------------
+\section{Configuration initiale (une seule fois par machine)}
+
+\begin{lstlisting}[style=bashstyle]
+git config --global user.name "Prenom Nom"
+git config --global user.email "votre.email@labo.fr"
+
+
+# Pour prevenir certains problemes en cas d'oublie
+git config --global pull.rebase true
+
+# Editeur utilise pour les messages de commit (optionnel)
+git config --global core.editor "nano"
+
+# Recommande : evite les soucis de fins de ligne Windows/Linux
+git config --global core.autocrlf input   # sous Linux/Mac
+git config --global core.autocrlf true    # sous Windows
+\end{lstlisting}
+
+%-------------------------------------------------------------------
+\section{Récupérer le projet}
+\subsection{Clés SSH : travailler à distance sans mot de passe}
+
+Pour pousser/récupérer sur un dépôt distant (GitHub, GitLab...) sans retaper son mot de passe, chaque personne génère une paire de clés sur sa propre machine : une clé \textbf{privée} (jamais partagée) et une clé \textbf{publique} (donnée au serveur).
+
+\subsection*{Générer la paire de clés (une fois par machine)}
+
+\begin{lstlisting}[style=bashstyle]
+ssh-keygen -t rsa -b 4096 -C "votre.email@labo.fr"
+\end{lstlisting}
+
+Touche Entree pour l'emplacement par defaut, et une passphrase optionnelle (recommandee) pour proteger la cle privee.
+
+\subsection*{Où les trouver}
+
+\begin{lstlisting}[style=bashstyle]
+~/.ssh/id_rsa       # cle PRIVEE : a ne jamais partager ni commiter
+~/.ssh/id_rsa.pub   # cle PUBLIQUE : celle-ci, on la partage
+\end{lstlisting}
+
+\subsection*{Donner la clé publique au serveur}
+
+\begin{lstlisting}[style=bashstyle]
+cat ~/.ssh/id_rsa.pub
+\end{lstlisting}
+
+Copier tout le contenu affiché, puis sur GitHub/GitLab : \emph{Settings $\rightarrow$ SSH and GPG keys $\rightarrow$ New SSH key}.
+
+\textbf{À retenir} : la clé privée ne se partage jamais, ne se copie jamais sur un autre poste, et ne se commite jamais dans le dépôt --- chaque collègue génère la sienne.
+\subsection*{Tester la connexion}
+
+\begin{lstlisting}[style=bashstyle]
+ssh -T git@github.com
+\end{lstlisting}
+
+\subsection*{Cloner / configurer le dépôt en SSH}
+
+\begin{lstlisting}[style=bashstyle]
+git clone git@github.com:utilisateur/projet.git
+
+# si le depot a deja ete clone:
+git remote add origin git@github.com:utilisateur/projet.git
+\end{lstlisting}
+
+
+Cette commande (git clone) télécharge tout l'historique et crée un dossier de travail prêt à l'emploi.
+
+\section{Les branches}
+
+Pour travailler efficacement en équipe sans se marcher sur les pieds, nous utilisons un système de \textbf{branches}. Une branche est une version parallèle du projet dans laquelle vous pouvez travailler librement sans impacter le document principal.
+
+La règle d'or de notre organisation est la suivante :
+\begin{itemize}
+	\item La branche \texttt{main} (principale) est la version officielle et propre du document. \textbf{Une seule personne la contrôle et centralise les modifications.} Vous ne devez jamais envoyer de modifications directement sur le \texttt{main}.
+	\item \textbf{Chacun possède sa propre branche de travail.} Vous y êtes le seul maître à bord, ce qui élimine à 100\% le risque de voir votre travail écrasé par un collègue.
+\end{itemize}
+
+Voici les commandes essentielles pour gérer vos branches au quotidien :
+
+\begin{lstlisting}[style=bashstyle]
+# 1. Creer une nouvelle branche et basculer dessus
+# Remplacez "nom-ma-branche" par votre prenom (ex: git checkout -b pierre)
+git checkout -b nom-ma-branche
+
+# 2. Envoyer votre branche sur le serveur POUR LA PREMIERE FOIS
+# L'option "-u" lie votre branche locale au serveur. Les fois suivantes, un simple "git push" suffira.
+git push -u origin nom-ma-branche
+
+# 3. Voir sur quelle branche vous vous trouvez actuellement
+git branch
+
+# 4. Revenir sur une branche existante (si vous avez change entre temps)
+git checkout nom-ma-branche
+
+# 5. Supprimer une branche (une fois votre travail fusionne dans le main par le responsable)
+# On se remet d'abord sur une autre branche (ex: main)
+git checkout main
+# Puis on supprime la branche localement
+git branch -d nom-ma-branche
+# (Optionnel) Supprimer la branche sur le serveur distant
+git push origin --delete nom-ma-branche
+\end{lstlisting}
+
+\subsection*{Mettre à jour sa branche par rapport au main}
+Avant de demander au responsable de fusionner votre travail dans le \texttt{main}, vous devez vous assurer que votre branche intègre les dernières nouveautés du projet. Pour cela, utilisez cette commande depuis votre branche :
+\begin{lstlisting}[style=bashstyle]
+git pull origin main --rebase
+\end{lstlisting}
+Si un conflit apparaît à ce moment-là, résolvez-le tranquillement sur votre machine avant de prévenir le responsable.
+
+%-------------------------------------------------------------------
+%-------------------------------------------------------------------
+\section{Le cycle de travail quotidien}
+
+C'est la séquence à connaître par cœur, \textbf{dans cet ordre} :
+
+\begin{lstlisting}[style=bashstyle]
+# 1. Toujours commencer par recuperer les dernieres modifications
+git pull
+# Avec notre parametrage, la commande equivaut en fait a git pull --rebase ce qui evite certaines deconvenus si vous oubliez de faire git pull
+
+# 2. ... travailler sur les fichiers .tex ...
+
+# 3. OPTIONNEL Voir ce qui a change
+git status
+git diff
+
+# 4. Preparer les fichiers modifies
+git add chapitre2.tex
+# ou pour tout ajouter :
+git add -A
+# Remarque git add . ajoute les documents du dossier courant et les documents des sous dossiers. 
+
+# 5. Valider avec un message clair
+git commit -m "Reecriture de l'intro de la section 2.3"
+
+# 6. Envoyer sur le serveur
+git push
+\end{lstlisting}
+
+\subsection*{Bonnes pratiques pour les messages de commit}
+
+\begin{itemize}
+  \item Un commit = \textbf{une modification logique} (pas « modifs diverses » qui mélange plusieurs sections).
+  \item Message à l'impératif et descriptif : « Ajoute la dérivation de l'opérateur de Born » plutôt que « update ».
+  \item Commiter \textbf{souvent} (plusieurs fois par session de travail) : cela réduit la taille des conflits potentiels et facilite le retour en arrière.
+\end{itemize}
+
+\subsection*{Commandes utiles pour s'y retrouver}
+
+\begin{lstlisting}[style=bashstyle]
+git log --oneline --graph --all   # historique condense avec les branches
+git diff                          # differences non encore "add"
+git diff --staged                 # differences deja "add" mais pas commit
+git show <hash>                   # contenu d'un commit donne
+git restore <fichier>             # annule les modifs locales d'un fichier non commite
+\end{lstlisting}
+
+%-------------------------------------------------------------------
+\section{Organiser le projet pour limiter les conflits}
+
+\subsection{Découper le document en plusieurs fichiers}
+
+Plutôt qu'un seul fichier \texttt{main.tex} géant, découper le document par chapitre ou par section, en utilisant \verb|\input{}| ou \verb|\include{}| pour les assembler dans le fichier principal.
+
+Si deux personnes travaillent sur des sections différentes (donc des fichiers différents), \textbf{aucun conflit n'est possible}, puisque Git fusionne sans aucun problème des modifications faites dans des fichiers distincts.
+
+\subsection{Une phrase = une ligne}
+
+C'est la règle la plus efficace, et la moins intuitive pour des habitués de Word : à l'intérieur d'un paragraphe, \textbf{aller à la ligne après chaque phrase} (ou après chaque proposition pour les phrases longues), plutôt que d'écrire tout un paragraphe sur une seule ligne.
+
+Quand une seule phrase change au milieu d'un paragraphe écrit sur une seule ligne, Git considère que \textbf{toute la ligne} a été modifiée par les deux personnes, ce qui provoque un conflit quasi systématique --- même si les deux modifications ne se recoupent pas réellement. Avec une phrase par ligne, seules les lignes effectivement modifiées peuvent entrer en conflit, et Git fusionne automatiquement tout le reste.
+
+\subsection{Fichier \texttt{.gitignore}}
+
+Les fichiers générés par la compilation n'ont rien à faire dans le dépôt : ils changent à chaque compilation et provoquent des conflits inutiles sur des fichiers binaires ou temporaires.
+
+Créer un fichier \texttt{.gitignore} à la racine du projet :
+
+\begin{lstlisting}[style=plainstyle]
+# Fichiers auxiliaires LaTeX
+*.aux
+*.log
+*.out
+*.toc
+*.lof
+*.lot
+*.bbl
+*.bcf
+*.blg
+*.synctex.gz
+*.fls
+*.fdb_latexmk
+*.run.xml
+*.nav
+*.snm
+*.vrb
+
+# Sorties
+*.pdf
+
+# Fichiers d'edition
+*~
+*.swp
+.DS_Store
+\end{lstlisting}
+
+\textbf{Discussion à avoir en équipe} : faut-il versionner le PDF final~? Souvent non (il est régénéré à la compilation et change à chaque fois, ce qui garantit des conflits sur fichier binaire). Si vous voulez partager un PDF de référence, préférez un espace partagé séparé (Drive, Overleaf, etc.).
+
+%-------------------------------------------------------------------
+\section{Prévenir les conflits~: checklist}
+
+Avant de se mettre au travail~:
+
+\begin{lstlisting}[style=bashstyle]
+git pull
+\end{lstlisting}
+
+Pendant le travail~:
+\begin{itemize}
+  \item Commits petits et fréquents.
+  \item Une phrase par ligne.
+  \item Rester dans « son » fichier ou sa section autant que possible.
+\end{itemize}
+
+Avant de pousser~:
+
+\begin{lstlisting}[style=bashstyle]
+git pull     # recuperer ce que les autres ont pousse pendant ce temps
+git push
+\end{lstlisting}
+
+Si \texttt{git pull} indique que des fichiers ont changé en même temps que les vôtres, Git tente une \textbf{fusion automatique}. Dans la grande majorité des cas (fichiers découpés + une phrase par ligne), cette fusion se fait sans aucune intervention. Le conflit n'apparaît que si \textbf{la même ligne} a été modifiée différemment des deux côtés.
+
+%-------------------------------------------------------------------
+\section{Branches~: pour les changements plus importants}
+
+Une branche permet de travailler « à côté » sans toucher à la version de référence (\texttt{main}), puis de fusionner quand le travail est prêt.
+
+\begin{lstlisting}[style=bashstyle]
+git switch -c restructuration-section3   # cree et bascule sur une nouvelle branche
+# ... travail ...
+git add -A
+git commit -m "Restructuration de la section 3"
+git push -u origin restructuration-section3
+\end{lstlisting}
+
+Ensuite, fusion dans \texttt{main}~:
+
+\begin{lstlisting}[style=bashstyle]
+git switch main
+git pull
+git merge restructuration-section3
+git push
+\end{lstlisting}
+
+\textbf{Recommandation} pour un groupe peu habitué à Git~: utiliser des branches surtout pour des changements structurels lourds (réorganisation de chapitres, changement de classe de document...), et travailler directement sur \texttt{main} pour les ajouts de contenu courants --- à condition de bien suivre les règles de la section précédente.
+
+%-------------------------------------------------------------------
+\section{Comprendre un conflit}
+
+Un conflit survient quand Git fusionne (lors d'un \texttt{pull} ou d'un \texttt{merge}) et que \textbf{la même portion de fichier} a été modifiée différemment par deux personnes. Git ne peut pas deviner quelle version garder, et vous laisse trancher.
+
+\texttt{git status} indique alors quelque chose comme~:
+
+\begin{lstlisting}[style=plainstyle]
+both modified:   sections/resultats.tex
+\end{lstlisting}
+
+Le fichier contient des \textbf{marqueurs de conflit} insérés directement dans le texte~:
+
+\begin{lstlisting}[style=plainstyle]
+<<<<<<< HEAD
+Les resultats montrent une convergence en moins de 10 iterations
+pour un contraste de densite inferieur a 20 %.
+=======
+Les resultats montrent que la serie converge rapidement
+(moins de 10 iterations) pour de faibles contrastes de densite.
+>>>>>>> origin/main
+\end{lstlisting}
+
+Lecture~:
+\begin{itemize}
+  \item Tout ce qui est entre \texttt{<<<<<<< HEAD} et \texttt{=======} correspond à \textbf{votre version locale}.
+  \item Tout ce qui est entre \texttt{=======} et \texttt{>>>>>>> origin/main} correspond à \textbf{la version reçue} (de l'autre personne).
+  \item Le fichier ne compile pas tant que ces marqueurs sont présents.
+\end{itemize}
+
+\textbf{Ce n'est pas grave.} Un conflit ne signifie pas que quelque chose est cassé ou perdu~: tout le travail des deux personnes est là, sous vos yeux, il faut juste décider comment le combiner.
+
+%-------------------------------------------------------------------
+\section{Résoudre un conflit, étape par étape}
+\label{sec:resoudre}
+
+\subsection*{Étape 1 --- Identifier les fichiers en conflit}
+
+\begin{lstlisting}[style=bashstyle]
+git status
+\end{lstlisting}
+
+Les fichiers listés en \texttt{both modified} (ou \texttt{unmerged}) sont ceux à traiter.
+
+\subsection*{Étape 2 --- Ouvrir le fichier et examiner le passage}
+
+Ouvrir le fichier dans votre éditeur. Repérer les blocs \texttt{<<<<<<<} / \texttt{=======} / \texttt{>>>>>>>}.
+
+\subsection*{Étape 3 --- Décider et réécrire}
+
+Trois options possibles pour chaque conflit~:
+\begin{enumerate}
+  \item \textbf{Garder votre version} $\rightarrow$ supprimer le bloc de l'autre et les marqueurs.
+  \item \textbf{Garder l'autre version} $\rightarrow$ supprimer votre bloc et les marqueurs.
+  \item \textbf{Combiner les deux} (souvent le bon choix~: par exemple garder votre formulation mais le chiffre que l'autre a corrigé) $\rightarrow$ réécrire une version fusionnée, puis supprimer les marqueurs.
+\end{enumerate}
+
+Dans tous les cas, \textbf{il ne doit plus rester aucune trace} de \texttt{<<<<<<<}, \texttt{=======}, \texttt{>>>>>>>} dans le fichier final.
+
+\subsection*{Étape 4 --- Marquer le fichier comme résolu}
+
+\begin{lstlisting}[style=bashstyle]
+git add sections/resultats.tex
+\end{lstlisting}
+
+\subsection*{Étape 5 --- Finaliser}
+
+Si le conflit venait d'un \texttt{git pull} (le cas le plus fréquent)~:
+
+\begin{lstlisting}[style=bashstyle]
+git commit          # un message par defaut est propose, on peut le garder
+git push
+\end{lstlisting}
+
+Si le conflit venait d'un \texttt{git rebase}~:
+
+\begin{lstlisting}[style=bashstyle]
+git rebase --continue
+\end{lstlisting}
+
+\subsection*{Étape 6 --- Vérifier que tout compile}
+
+Toujours \textbf{recompiler le document} après une résolution de conflit, même si Git n'a rien signalé d'anormal~: il est facile d'oublier une accolade ou de dupliquer un \texttt{label} en fusionnant deux versions.
+
+%-------------------------------------------------------------------
+\section{Utiliser un outil visuel de résolution}
+
+Travailler à la main avec les marqueurs \texttt{<<<<<<<} est faisable mais source d'erreurs. Des outils affichent les deux versions côte à côte (vue « 3-way merge »)~:
+
+\begin{itemize}
+  \item \textbf{VS Code}~: ouvre directement le fichier en conflit avec des boutons \emph{Accept Current Change / Accept Incoming Change / Accept Both Changes}. C'est l'option la plus simple à recommander à des collègues peu expérimentés.
+  \item \texttt{git mergetool} avec un outil comme \texttt{meld}~:
+\end{itemize}
+
+\begin{lstlisting}[style=bashstyle]
+git mergetool
+\end{lstlisting}
+
+(nécessite d'avoir installé \texttt{meld} et configuré \texttt{git config --global merge.tool meld})
+
+Dans les deux cas, le principe reste le même~: choisir/combiner, sauvegarder, puis \texttt{git add} + \texttt{git commit}.
+
+%-------------------------------------------------------------------
+\section{Annuler une fusion en cours}
+
+Si la situation devient confuse, il est toujours possible de revenir à l'état d'avant la tentative de fusion, \textbf{sans rien perdre} (vos commits locaux restent intacts)~:
+
+\begin{lstlisting}[style=bashstyle]
+git merge --abort     # si le conflit vient d'un merge/pull
+git rebase --abort    # si le conflit vient d'un rebase
+\end{lstlisting}
+
+Cela permet de souffler, éventuellement de discuter avec son collègue, puis de retenter.
+
+%-------------------------------------------------------------------
+\section{Cas particuliers}
+
+\subsection{Fichiers binaires (images, PDF)}
+
+Git ne sait pas fusionner le contenu d'une image ou d'un PDF ligne par ligne. En cas de conflit sur un fichier binaire, il faut choisir explicitement une version~:
+
+\begin{lstlisting}[style=bashstyle]
+git checkout --ours  chemin/vers/figure.png    # garder votre version
+git checkout --theirs chemin/vers/figure.png   # garder la version distante
+git add chemin/vers/figure.png
+\end{lstlisting}
+
+D'où l'intérêt de \textbf{prévenir avant de remplacer une figure} partagée.
+
+\subsection{Fichier \texttt{.bib}}
+
+Les fichiers \texttt{.bib} sont du texte, donc fusionnables comme un fichier \texttt{.tex}, mais les conflits y sont fréquents si tout le monde ajoute des entrées en bas de fichier. Astuce~: ajouter ses nouvelles entrées en les classant (par exemple par ordre alphabétique de clé) plutôt qu'en les empilant toutes à la fin --- cela répartit les modifications sur des lignes différentes.
+
+\subsection{Suivre les changements de texte (\texttt{latexdiff})}
+
+Pour visualiser, sous forme de PDF, les différences entre deux versions (utile pour relire les modifications d'un collègue ou répondre à un relecteur)~:
+
+\begin{lstlisting}[style=bashstyle]
+latexdiff ancienne_version.tex nouvelle_version.tex > diff.tex
+\end{lstlisting}
+
+\texttt{latexdiff} est un outil séparé (à installer), indépendant de Git, mais très complémentaire pour le travail collaboratif.
+
+%-------------------------------------------------------------------
+\section{Pense-bête (cheat sheet)}
+
+\begin{center}
+\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{@{}p{0.40\linewidth}p{0.55\linewidth}@{}}
+\toprule
+\textbf{Commande} & \textbf{Usage} \\
+\midrule
+\texttt{git status} & Voir l'état actuel (modifs, conflits...) \\
+\texttt{git pull} & Récupérer + fusionner les changements distants \\
+\texttt{git add <fichier>} & Préparer un fichier pour le commit \\
+\texttt{git commit -m "..."} & Valider les changements préparés \\
+\texttt{git push} & Envoyer ses commits sur le serveur \\
+\texttt{git diff} & Voir les modifications non préparées \\
+\texttt{git log --oneline --graph} & Historique condensé \\
+\texttt{git switch -c <branche>} & Créer et basculer sur une nouvelle branche \\
+\texttt{git merge <branche>} & Fusionner une branche dans la branche courante \\
+\texttt{git merge --abort} & Annuler une fusion en cours \\
+\texttt{git restore <fichier>} & Annuler des modifs locales non commitées \\
+\texttt{git checkout --ours/--theirs <f>} & Trancher un conflit sur un fichier binaire \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+%-------------------------------------------------------------------
+\section{Résumé des bonnes pratiques}
+
+\begin{enumerate}
+  \item \texttt{git pull} avant de commencer à travailler, et avant de \texttt{push}.
+  \item Découper le document en plusieurs fichiers \texttt{.tex} (un par section ou chapitre).
+  \item Une phrase = une ligne.
+  \item Commits petits, fréquents, avec un message clair.
+  \item \texttt{.gitignore} pour exclure les fichiers générés par la compilation.
+  \item Prévenir l'équipe avant un gros remaniement structurel (idéalement dans une branche dédiée).
+  \item En cas de conflit~: pas de panique, lire les deux versions, choisir/combiner, \texttt{git add}, \texttt{git commit}, recompiler.
+  \item \texttt{git merge --abort} permet de revenir en arrière sans rien perdre si besoin.
+\end{enumerate}
+
+%-------------------------------------------------------------------
+\section{Petit exercice pour la formation}
+
+Pour illustrer un conflit en conditions réelles, deux personnes peuvent~:
+
+\begin{enumerate}
+  \item Cloner le même dépôt de test.
+  \item Sans faire \texttt{git pull} entre les deux, modifier \textbf{la même ligne} d'un fichier \texttt{.tex} (par exemple une phrase de l'introduction), chacun de son côté.
+  \item La première personne fait \texttt{git add}, \texttt{git commit}, \texttt{git push} sans problème.
+  \item La seconde personne fait \texttt{git add}, \texttt{git commit}, puis \texttt{git pull} $\rightarrow$ un conflit apparaît.
+  \item Résoudre le conflit en suivant la section~\ref{sec:resoudre}, puis \texttt{git push}.
+\end{enumerate}
+
+Cet exercice « à blanc » permet de dérouler une fois la procédure complète dans un cadre sans enjeu, avant de l'appliquer sur le vrai projet.
+
+\end{document}

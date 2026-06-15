@@ -1,0 +1,11 @@
+# 1. On ignore absolument tout le contenu du dépôt
+*
+
+# 2. On autorise quand même à l'intérieur des dossiers (sinon Git ne cherche pas plus loin)
+!*/
+
+# 3. On ne veut pas ignorer le fichier .gitignore lui-même
+!.gitignore
+
+# 4. On conserve uniquement les fichiers .tex
+!*.tex

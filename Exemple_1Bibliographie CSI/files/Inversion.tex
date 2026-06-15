@@ -1,0 +1,117 @@
+% Préciser que j'en suis à l'ébauche de biblio sur ce sujet précis
+% \textcolor{blue}{Inversion se base sur un grand nombre d appel d'un modèle directe et sur la minimisation d'une fonction coût}
+% \textcolor{blue}{Avec une physique on peut faire de l'inversion sur les param geo directement, pour coupler on peut utiliser les param petro}
+% \textcolor{blue}{Il existe diffèrent type de couplage JPI (Joined petrophysiqcal inversion)  }
+% Quand on utilise une seule physique 
+% \textcolor{blue}{Si on lit l article de Quin et Bohlen, on nous apprend qu'il y a deux grandes classes de méthodes de faire de l'inversion couplée, la joint structural inversion (JSI) qui ne nécessite pas de fixer des lois pétrophysique (loi reliant les paramètres petrophysique aux paramètres géophysiques) et dont on peut même extraire des relations pétrophysiques. L'autre et c'est plustot celle la qu on va choisir car elle est plus précise et robuste pour éstimer $\phi$ et $s$, est la JPI (join petrophysical inversion). Classiquement elle consiste à partir d'une première hypothèse sur les parametres $\phi$ et $s$, en déduire, à l'aide des relation pétrophysique, les parametres géophysique mécanique, puis en minimisant une fonction cout basé sur les informations mécanique uniquement on calcule de nouveaux phi et s, puis on fait idem en électromag. Ainsi les estimation de $\phi$ et $s$ de la mécanique alimente les estimation de l'electromag et vis verca en boucle jusqu'à une condition d'arret. 
+% }
+
+
+% Il existe pas mal de biblio on peut citer 
+% Inversion couplé avec 3 physique par exemple \cite{GARAMBOIS2002}, de deux physqiue \cite{Abubakar_2012}. 
+
+\section{Inversions conjointes basées sur les relations pétrophysiques}
+
+Cette section présente une ébauche de la revue de littérature concernant l'approche de l'inversion conjointe appliquée à la caractérisation du sous-sol. Il existe différentes méthodes d'inversion; on peut citer la FWI (Full Wave Inversion), les méthodes d'inversion qualitatives et l'intelligence artificielle. Un travail bibliographique reste à faire la-dessus, ici nous présentons les grands principes et le couplages des physiques grâce aux relations pétrophysiques que nous présentons.
+
+\subsubsection*{Principes de l'inversion}
+
+Le processus d'inversion consiste à déterminer les paramètres du sous-sol (paramètres pétrophysiques ou géophysique) à partir de mesures des champs réalisées en surface.\par
+
+Le processus débute par une estimation initiale des paramètres du milieu. L'utilisation du modèle direct permet alors de prédire le signal de surface correspondant à cette hypothèse. L'objectif est ensuite d'améliorer ce modèle en minimisant une fonction coût qui quantifie l'erreur entre les données observées et les données prédites. L'ajustement des paramètres est classiquement réalisé de manière itérative par des algorithmes d'optimisation basés sur une descente de gradient, afin de réduire progressivement cet écart et de converger vers une solution optimale.\par
+
+Lorsqu'une seule propriété physique est utilisée, l'inversion se concentre sur la reconstruction des paramètres géophysiques qui sont directement sensibles à cette physique quitte à déterminer les paramètres pétrophysiques dans un second temps. \par 
+
+
+On distingue principalement deux grandes classes de méthodes d'inversions conjointes \cite{Qin_Bohlen}: 
+\begin{itemize}
+    \item L'inversion Conjointe Structurelle (Joint Structural Inversion, JSI) : Cette approche impose uniquement une contrainte de cohérence structurelle entre les différents modèles. Elle ne nécessite pas la connaissance à priori des relations pétrophysiques explicites et peut même être utilisée pour extraire ces relations.
+    \item L'inversion pétrophysique conjointe (Joint Petrophysical Inversion, JPI) : La JPI est l'approche privilégiée lorsque l'objectif est d'obtenir des estimations plus précises et robustes des paramètres pétrophysiques. Nous allons nous concentrer sur celle ci. 
+\end{itemize}
+
+La JPI classique procède par un couplage itératif et croisé. Partant d'une estimation initiale de $\phi$ et $s$, on utilise des lois pétrophysiques pour dériver les modèles géophysiques. Chaque inversion physique (mécanique, électromagnétique) est ensuite menée séparément en minimisant sa propre fonction coût, mais les estimations mises à jour de $\phi$ et $s$ issues d'une inversion (ex: sismique) sont transmises comme information à priori pour l'autre inversion (ex: électromagnétique), et vice-versa. Ce processus se poursuit itérativement jusqu'à atteindre une condition de convergence. \par 
+
+%(relations liant ϕ et s aux paramètres géophysiques, par exemple, la loi de Gassmann pour les propriétés mécaniques et la loi d'Archie pour les propriétés électriques)
+Qin et Bohlen \cite{Qin_Bohlen} proposent une variante (Indirect JPI) qui fonctionne mieux mais qui n'utilise ni $v_p$ ni $\sigma$, lors de sa thèse, Quentin Didier a proposé une méthode qu'il appelle Simultaneous Joint Petrophysical Inversion (SiJPI) \cite{didie2024} et qui utilise les deux physiques simultanément et cherche à minimiser la somme des fonctions coût. Un article est en cours de publication à ce sujet. \par
+
+Les travaux existants sur l'inversion conjointe témoignent d'une diversité d'approches, allant du couplage de deux jeux de données géophysiques (EM méca) \cite{Abubakar_2012} à l'intégration simultanée de trois propriétés physiques (EM méca et ERT), comme illustré par Garambois et al. \cite{GARAMBOIS2002}.
+
+\subsubsection{Relation pétrophysique en mécanique}
+
+En supposant que le sol se comporte comme un solide élastique linéaire et isotrope, la propagation des ondes mécaniques est régie par les équations de Navier élastodynamiques :
+
+\begin{equation}
+    \rho \pderive[2]{\ubm}{t} = (\lambda+\mu) \nabla\nabla.\ubm + \mu \Delta \ubm + \fbm_v
+\end{equation}
+
+Où
+\begin{itemize}
+    \item $\rho$ est la masse volumique Apparente m
+    \item $\mathbf{u}$ est le vecteur de Déplacement.
+    \item $\lambda$ et $\mu$ sont les paramètres de Lamé 
+    \begin{itemize}
+        \item $\mathbf{\mu}$ le module de Cisaillement
+        \item $\mathbf{\lambda}$ (Premier Paramètre de Lamé): Un paramètre mathématique sans interprétation physique directe simple.
+    \end{itemize}
+\end{itemize}
+
+Ces paramètres de Lamé ($\lambda$ et $\mu$), ainsi que $\rho$, constituent les paramètres géophysiques auxquels l'onde mécanique est sensible. Ils peuvent être exprimés en fonction des vitesses de l'onde de compression ($v_P$) et de l'onde de cisaillement ($v_S$), ainsi que de la masse volumique $\rho$.
+
+\begin{align*}
+    \mu &= \rho v_S^2 \\
+    \lambda &= \rho v_P^2 - 2\mu = \rho (v_P^2 - 2v_S^2)
+\end{align*}
+
+Afin de relier les paramètres géophysiques ($v_P$, $v_S$, $\rho$) aux paramètres pétrophysiques ($\phi$, $S$), des relations pétrophysiques sont employées. La \textbf{théorie de Biot-Gassmann} \cite{Biot1956,Gassmann1951} permet de relier $v_p$ et $v_s$ au module de compressibilité $K_{sat}$ et de cisaillement $\mu_{sat}$ du milieu saturé en fluide (avec de l'air et de l'eau en proportion connues). Ces derniers paramètres sont eux mêmes reliés aux paramètres de la matrice solide drainée - sans fluide donc - (indice "frame") et des propriétés de l'air et de l'eau (indice "w" pour water). Les relations que nous comptons utiliser sont les suivantes \cite{Abubakar_2012}.
+
+%%%%%%%
+
+
+\begin{align*}
+v_P &= \sqrt{\frac{K_{\text{sat}} + \frac{4}{3}\mu_{\text{sat}}}{\rho_{\text{sat}}}} \\
+v_S &= \sqrt{\frac{\mu_{\text{sat}}}{\rho_{\text{sat}}}} \\
+K_{\text{sat}} &= (1 - \beta)K_{\text{frame}} + \beta^2 M \\
+\mu_{\text{sat}} &= (1 - \beta)\mu_{\text{frame}} \\
+\frac{1}{M} &= \frac{\beta - \phi}{K_{\text{frame}}} + \phi \left( \frac{S_w}{K_w} + \frac{1 - S_w}{K_{\text{air}}} \right) \\
+\rho_{\text{sat}} &= (1 - \phi)\rho_s + \phi(\text{S}_w \rho_w + (1 - S_w)\rho_{\text{air}})
+\end{align*}
+
+Le paramètre $\beta$ permet de tenir compte du fait que si la porosité dépasse un certain seuil critique, on ne peut plus parler d'une matrice solide remplie de fluide mais d'une matrice fluide avec des particules en suspension. Cette valeur critique est autour de $0.4$ \cite{Nur1998}
+\begin{equation}
+    \beta =
+\begin{cases}
+    \frac{\phi}{\phi_c} & \text{si } 0 \leq \phi \leq \phi_c \\
+    1 & \text{si } \phi > \phi_c
+\end{cases}
+\end{equation}
+Bien entendu d'autres modèles sont possibles.\par 
+
+La théorie de Biot-Gassman se base sur les hypothèses suivantes: les minéraux et les fluides interagissent uniquement de manière mécanique, le matériau est totalement saturé en fluide (air+eau) et isotrope, il est composé d'un seul minéral et, surtout, le module de cisaillement n'est pas influencé par le fluide interstitiel.
+
+\subsection{Relation ptrophysique en électromagnétique}
+Une vue d'ensemble des modèles existants est donnée par \cite{GLOVER201589}. 
+La loi la plus utilisée est phénoménologique, on la doit à Archie \cite{Archie}.
+
+\begin{equation}
+    \sigma = \frac{1}{\tau} \sigma_w \phi^m S^n 
+\end{equation}
+
+Où $\tau$ désigne la tortuosité, m et n sont des exposants à déterminer expérimentalement on les appelle les exposant de cémentation et de saturation.\par 
+
+L'application de la loi d'Archie aux milieux naturels riches en argiles est problématique. Les argiles, conductrices en raison de leur teneur en ions, possèdent une conductivité de surface similaire à celle de l'eau des pores. Pour corriger cette sous-estimation de la conductivité de la roche (et donc éviter de surestimer la saturation en eau), Waxman et Smits \cite{Waxman} ont introduit un terme correctif à l'équation d'Archie. Ce terme additionnel permet de séparer et de quantifier l'effet de la conductivité liée aux minéraux argileux.
+
+$$
+\sigma = \phi^m S_{\text{eau}}^n (\sigma_{\text{eau}} + \sigma_S)
+\eqno{(1.13)}
+$$
+
+Afin de pallier les limitations de la loi d'Archie dans les milieux conducteurs (argiles ou minéralisés), une correction essentielle consiste à intégrer explicitement la conduction électrique intrinsèque au squelette solide (matrice). L'ajout de ce terme permet ainsi de modéliser l'ensemble des phénomènes de conduction qui ne sont pas attribuables au seul fluide interstitiel, comme le formalisme suivant le détaille \cite{Glover2010Generalized}.
+$$
+\sigma = \sigma_M (1 - \phi)^p + \sigma_{\text{eau}} \phi^m S_{\text{eau}}^n
+\eqno{(1.14)}
+$$
+On parle alors de loi d'Archie modifiée. %L'ensemble de ces lois étant empiriques, elles sont bien sûr soumises à des limites. C'est pourquoi DAY-LEWIS et al., 2017 ont développé un modèlela méthode CRIM pour complex refractive index method
+Pour la permittivité on utilise la méthode CRIM (complex refractive index method): \cite{GARAMBOIS2002}: 
+\begin{equation*}
+    \varepsilon_r = \left[ (1 - \phi) \sqrt{\varepsilon_r^M} + \phi \left( S_{eau} \sqrt{\varepsilon_r^{eau}} + (1 - S_{eau}) \sqrt{\varepsilon_r^{air}} \right) \right]^2
+\end{equation*}

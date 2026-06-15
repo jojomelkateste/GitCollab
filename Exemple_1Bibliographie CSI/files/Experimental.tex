@@ -1,0 +1,182 @@
+\section{Développement experimental}
+
+L’objectif de nos expériences en laboratoire est de valider un code d’inversion (conjointe ou non) électromagnétique-mécanique (EM-Méca) en reproduisant, à échelle réduite, des expériences géophysiques comme la sismique réfraction et le GPR. Nous cherchons à mimer un sol agricole en utilisant un milieu artificiel, avec des maquettes dont les dimensions raisonnables se situent entre le centimètre et le décimètre. Cependant, au vu des ordres de grandeur des fréquences, les expériences électromagnétiques ne sont pas réalisables dans notre laboratoire mais sont possible dans une chambre anéchoïque. En revanche, les expériences mécaniques, grâce à l’utilisation de capteurs piézoélectriques, sont faisables, comme le montrent les travaux de Bretaudeau \cite{bretaudeau} et Filippi   \cite{Filippi}.\par
+
+Avant de construire une maquette complète, composée de couches de matériaux homogènes, il est essentiel de caractériser ces matériaux. En s’appuyant sur les thèses de Bretaudeau et Filippi, nous nous orientons vers l’utilisation de résines mélangées à différentes charges pour viser des paramètres mécaniques et électromagnétiques spécifiques. Il sera donc crucial de vérifier que les propriétés obtenues correspondent bien à celles visées.\par
+
+Dans ce document, nous commencerons par présenter les bases du dimensionnement de la maquette, puis nous détaillerons les différentes méthodes issues des thèses pour mesurer les paramètres mécaniques.\par
+
+\subsection{Premier dimensionnement approximatif}
+
+Dans cette partie, nous définissons le \textbf{rapport d'aspect} $a_X$ pour une quantité physique $X$ comme le rapport de sa valeur sur le terrain (indice $T$) sur sa valeur au laboratoire (indice $L$), soit $a_X = X_T / X_L$. Par exemple, le rapport d'aspect en longueur est défini par $a_l = L_T / L_L$.
+
+Le sol et les matériaux synthétiques sont imagés à l'aide de deux types d'ondes (électromagnétiques et mécaniques) ayant des longueurs d'onde et des vitesses différentes. Nous définissons de façon similaire les rapports d'aspects en fréquence, $a_{f,EM}$ et $a_{f,Meca}$, ainsi que les rapports en célérité $a_{c,EM}$ et $a_{c,Meca}$. En mécanique, nous nous concentrons sur la célérité des ondes P, par exemple. Ces rapports sont liés par la relation $a_f = a_c/a_{\lambda}$, qui découle de $c = \lambda f$.
+
+Afin d'assurer une résolution au moins équivalente à l'échelle du laboratoire, la \textbf{condition de similitude} impose de conserver le même nombre de longueurs d'onde dans le milieu. Ceci se traduit par l'égalité des rapports d'aspect en longueur et en longueur d'onde pour les deux types d'ondes : $a_l = a_{\lambda,EM} = a_{\lambda,Meca}$.
+
+
+Nous cherchons à représenter à échelle réduite un sol agricole de type lysimètre de l'INRAE d'Avignon, tel que décrit dans la thèse de Q. Didier \cite{didie2024}, composé de trois couches principales : une couche superficielle non consolidée, une couche intermédiaire, et une nappe phréatique. Ce sol s’étend sur environ 10 m de profondeur, ce qui constitue notre longueur typique à l’échelle du terrain ($L_T = 10$ m). À l’échelle du laboratoire, une longueur typique raisonnable pour la maquette est de l’ordre de 1 cm à 10 cm ($L_L = 0.01$ à $0.1$ m), ce qui donne un rapport d’aspect en longueur $a_l = L_T / L_L$ compris entre 100 et 1000. En électromagnétisme le sol est reconstruit en utilisant les données d'un GPR de fréquences nominale comprises entre 50 et 250 $MHz$ \cite{pulseekko}, les ondes mécaniques utilisées sont crées par des coups de marteaux de fréquences centrales entre 20 et 200 $Hz$. \par 
+
+
+
+Les ordres de grandeur des vitesses des ondes mécanique $v_p$ et $v_s$ s’échelonnent respectivement entre 200 et 2500 m.s$^{-1}$ et 100 à 500 m.s$^{-1}$. Ce sont des ordres de grandeurs raisonnables pour nos expériences. En électromagnétiques la permittivité relative $\epsilon_r$, par exemple, varie entre 8 et 20 ce qui est un peu élevé pour nos expérience, on cherchera donc à avoir un rapport d'aspect important sur ce paramètre. En choisissant un rapport d'aspect $a_c = c_T/c_L = \sqrt{\frac{\epsilon_{r,L}}{\epsilon_{r,T}}} = \frac{1}{2} $ on a besoin d'avoir $\epsilon_r$ quatre fois plus petit au labo que dans le terrain $\epsilon_{r,L} = \frac{1}{4} \epsilon_{r,T} \leq 5 $ ce qui est plus raisonnable.\par
+
+ %À l’échelle du laboratoire, une longueur typique raisonnable pour la maquette est de l’ordre de 1 cm à 1 m ($L_L = 0.1$ à $1$ m), ce qui donne un rapport d’aspect en longueur $a_l$ compris entre 10 et 1000. À titre de comparaison, Filippi a travaillé avec un rapport d’aspect en longueur $a_l = 1000$, en construisant un échantillon où une cavité était située à 1 cm sous la surface, au-dessus d'un demi-espace. Si nous construisons une maquette de cette dimension, en supposant un rapport d'aspect en célérité $a_c = 0.5$, on tombe sur un rapport d'aspect en fréquence de 500, soit si on considère un GPR de 100 MHz une fréquence de $50 GHz$ trop élevée. On va donc devoir augmenter la taille de la maquette et devoir sonder au Ghz. Cela est possible à la chambre anechoique de l'institut Fresnel qui a pour gamme de fréquence $f \in [0,7, 26]~\text{GHz}$. Cette gamme de fréquence nous limite donc, prenons donc une fréquence centrale raisonnable de 10 GHz. Cela nous donne $a_{f,EM} = 1/100$ et, avec $a_c = 0.5$, la relation de similitude impose un rapport d'aspect en longueur $a_l = 50$. Cela correspond à une maquette d'environs $20~\text{cm}$ pour un terrain de $10~\text{m}$. Ce compromis permet de rester dans des \textbf{dimensions décimétriques} ($L_L \approx 20~\text{cm}$), tout en respectant les contraintes imposées par les équipements électromagnétiques.:
+
+ %\subsubsection{Choix des Dimensions}
+
+Le choix du \textbf{rapport d'aspect en longueur} $a_l$ est un compromis entre une taille de maquette réalisable et les contraintes instrumentales.\par
+
+En nous basant sur une longueur de terrain typique $L_T = 10~\text{m}$ et une longueur laboratoire raisonnable entre le centimètre et le décimètre, le rapport $a_l$ initial est compris entre 100 et 1000. À titre de comparaison, Filippi a travaillé avec un rapport d’aspect en longueur $a_l = 1000$, en construisant un échantillon où une cavité était située à 1 cm sous la surface, au-dessus d'un demi-espace. \par
+
+Si nous considérons un rapport élevé, tel que $a_l = 1000$ et en visant un rapport d'aspect en célérité $a_{c,EM} = 0.5$, la condition de similitude ($a_f = a_c/a_{l}$) impliquerait un rapport d'aspect en fréquence $a_{f,EM} = 0.5/1000 = 1/2000$. Pour un GPR de terrain de $100~\text{MHz}$, la fréquence équivalente au laboratoire serait de $200~\text{GHz}$, ce qui est bien au-delà du raisonnable. Nous devons donc ajuster $a_l$ pour respecter la gamme de fréquences d'une chambre anéchoïque, soit $[0.7, 26]~\text{GHz}$. En fixant une fréquence centrale de laboratoire réalisable $f_{L,EM} = 10~\text{GHz}$, le rapport d'aspect en fréquence devient :
+\begin{equation}
+    a_{f,EM} = \frac{f_{T,EM}}{f_{L,EM}} = \frac{100~\text{MHz}}{10~\text{GHz}} = \frac{10^8~\text{Hz}}{10^{10}~\text{Hz}} = \frac{1}{100}
+\end{equation}
+
+En conservant le rapport de célérité visé $a_{c,EM} = 0.5$, la \textbf{condition de similitude} $a_l = a_{c,EM} / a_{f,EM}$ impose un rapport d'aspect en longueur :
+\begin{equation}
+    a_l = \frac{0.5}{1/100} = 50
+\end{equation}
+
+Ce rapport $a_l = 50$ conduit à une longueur de maquette réalisable de :
+\begin{equation}
+    L_L = \frac{L_T}{a_l} = \frac{10~\text{m}}{50} = 0.2~\text{m} = 20~\text{cm}
+\end{equation}
+Ce compromis de $\mathbf{L_L \approx 20~\text{cm}}$ permet de travailler avec des \textbf{dimensions décimétriques} tout en respectant les contraintes des équipements électromagnétiques disponibles.
+
+\subsection{Expériences de caractérisation d'un matériau homogène}
+\subsubsection{Mesure des vitesses de propagation}
+
+Dans la thèse de Bretaudeau \cite{bretaudeau}, un protocole expérimental est proposé pour mesurer les vitesses $v_p$, $v_s$ et $v_R$ (ondes de Rayleigh) dans le cas où la vitesse est indépendante de la fréquence. Ce protocole consiste à déterminer $v_p$ et $v_R$, puis à en déduire $v_s$ et le coefficient de Poisson $\nu$ à l’aide des relations suivantes (équations 1.10 et 1.22 de sa thèse) :
+
+\begin{equation}
+    \begin{cases}
+         \nu = \frac{v_p^2 - 2v_s^2}{2\left( v_p^2 - v_s^2 \right)} \\
+         v_s = \frac{1 + \nu}{1.12\nu + 0.87} v_R \quad \text{(Formule de Viktorov, 1965 \cite{Viktorov})}
+    \end{cases}
+    \label{eq:exp:nu_vs}
+\end{equation}
+
+Pour trouver $\nu$, il faut résoudre numériquement l’équation suivante :
+
+\begin{equation}
+    v_p^2(1.12\nu + 0.87)(2\nu - 1) + v_R^2(1 + \nu)^2(2 - \nu) = 0
+\end{equation}
+
+Bretaudeau a vérifié que l’onde de surface $R$ n’est pas dispersive dans la résine époxy au-delà de 50 kHz (méthode $p-\omega$ \cite{Mokhtar1988, Yilmaz}). Cependant, à basse fréquence (25 kHz), une dispersion est observée, ce qui justifie de travailler à 50 ou 100 kHz. La sédimentation pouvant également induire une dispersion, Bretaudeau recommande de couler des couches de résine d'au moins 5 mm pour garantir l’homogénéité du matériau.
+
+\subsubsection*{Principe de la mesure}
+
+La vitesse est mesurée à partir du temps d’arrivée des premières ondes. Des capteurs piézoélectriques ponctuels\footnote{Capteurs ASC, fréquence centrale 100 kHz.} sont utilisés, avec un émetteur et un récepteur placés du même côté (mesure en réflexion). 
+
+\subsubsection*{Méthodes alternatives}
+
+Bretaudeau propose une méthode basée sur les modes de Lamb pour déterminer directement $\nu$. Une excitation longitudinale génère le mode symétrique $S_1$, avec une résonance à la fréquence $f_{r1}$. Une excitation transversale génère le mode antisymétrique $A_2$, avec une résonance à $f_{r2}$. Les vitesses $v_p$ et $v_s$ sont reliées à ces fréquences par :
+
+\begin{equation}
+    \begin{cases}
+         f_{r1} = \beta_1 \frac{v_p}{2e} \\
+         f_{r2} = \beta_2 \frac{3v_s}{2e}
+    \end{cases}
+\end{equation}
+
+Les coefficients $\beta_1$ et $\beta_2$ dépendent uniquement de $\nu$ et peuvent être déterminés à partir de courbes de dispersion. Une fois $\nu$ connu, on en déduit $v_p$, $v_s$ et $v_R$ via la relation de Viktorov. Cette méthode est réalisée en transmission.
+
+
+\subsubsection{Mesure de l'Atténuation}
+
+L'étude de l'atténuation présente deux intérêts majeurs :
+\begin{itemize}
+    \item Premièrement, l'\textbf{atténuation intrinsèque} est une donnée fondamentale qui figure dans le modèle direct, ce qui justifie naturellement son évaluation.
+    \item Le second intérêt concerne la détection du signal. L'amplitude du signal reçu doit être suffisante pour être mesurée. Il est donc primordial de connaître l'atténuation du signal dans la résine, le seuil de détection du capteur, ainsi que le niveau d'amplitude du bruit ambiant. Cette connaissance est cruciale pour déterminer le gain d'amplification nécessaire pour le signal émis, notamment pour le choix de l'amplificateur à utiliser.
+\end{itemize}
+
+On distingue classiquement deux types d'atténuations : l'\textbf{atténuation géométrique}, connue, et l'\textbf{atténuation intrinsèque}, qui constitue l'objet principal de notre caractérisation.
+
+\subsubsection{Atténuation Géométrique}
+
+L'amplitude des ondes de volume (telles que les ondes P et S) se disperse géométriquement en $1/r$, où $r$ est la distance parcourue. L'amplitude des ondes de surface de Rayleigh se disperse en $1/\sqrt{r}$.
+
+\subsubsection*{Atténuation Intrinsèque}
+
+\subsubsection*{Facteur de Qualité}
+
+Un modèle linéaire viscoélastique est généralement proposé dans les thèses de Filippi et Bretaudeau \cite{Filippi, bretaudeau}. Nous commençons par définir le \textbf{facteur de qualité}, $Q$.
+
+Considérons un système soumis à une oscillation forcée de pulsation $\omega$ se propageant dans une direction $d$. Le déplacement $u(x, \omega)$ a la forme :
+
+\begin{equation}
+u(x,\omega) = A_0 e^{i(k_r+ik_i)d - i\omega t} = A_0 e^{-k_id} e^{i(\omega d/c - \omega t)}
+\end{equation}
+Où $k_r$ est le nombre d'onde réel (lié à la célérité $c$ par $k_r = \omega/c$) et $k_i$ est le coefficient d'atténuation.
+
+Le facteur de qualité $Q$ est alors défini par la relation :
+
+\begin{equation}
+\frac{\omega}{2cQ} = k_i
+\end{equation}
+
+Où $c$ est la célérité de l'onde. Remarquons que $k_i$ est souvent noté $\alpha$.
+Cela revient à poser :
+
+\begin{equation}
+\boxed{
+Q(\omega) = \frac{1}{2}\frac{k_r}{k_i}
+}
+\end{equation}
+
+En fait, on peut démontrer que $Q = -\frac{\pi A}{\Delta A}$, où $\Delta A \equiv \frac{dA}{dx} \lambda$ représente la variation d'amplitude sur une longueur d'onde $\lambda$\footnote{Cette fluctuation d'amplitude $\Delta A$ est théorique et ne correspond pas directement à la fluctuation d'amplitude mesurée, même corrigée de l'atténuation géométrique.}.\par 
+
+Les vitesses étant les dérivé du déplacement par rapport au temps. On a :
+
+\begin{equation}
+    v_{P/S} \propto  e^{-\dfrac{\omega}{2v_{P/S}Q_{P/S}}}
+\end{equation}
+
+
+\subsubsection*{Méthode des Rapports Spectraux}
+
+% La plupart des méthodes de mesure de l'atténuation reposent sur l'hypothèse forte que le facteur de qualité \textbf{$Q$ est indépendant de la fréquence} étudiée. Cette hypothèse est considérée comme valide si $Q>10$, ce qui correspond à un matériau peu absorbant \cite{Kjartansson}. Quoi qu'il en soit, la méthode qui suit peut être appliquée en toute généralité ; l'obtention d'une relation linéaire confirmera alors la constance du facteur de qualité sur la gamme de fréquences analysée.
+
+% \subsubsection*{Méthode des Rapports Spectraux}
+
+La \textbf{Méthode des Rapports Spectraux} peut être appliquée en toute généralité pour caractériser l'atténuation. Toutefois, son utilisation la plus courante repose sur l'hypothèse que le \textbf{facteur de qualité $Q$ est indépendant de la fréquence} étudiée.
+
+Cette hypothèse est jugée valide pour les matériaux peu absorbants, lorsque $Q>10$ \cite{Kjartansson1979}. Étant donné que les facteurs de qualité attendus pour nos résines sont dans ce régime, nous considérons cette hypothèse comme satisfaite \emph{a priori}. Néanmoins, l'obtention d'une relation linéaire lors du tracé du logarithme du rapport spectral en fonction de la fréquence confirmera \emph{a posteriori} la constance du facteur de qualité sur la gamme de fréquences analysée.
+
+L'amplitude de l'onde mesurée par le détecteur dans le domaine fréquentiel (après sélection de l'onde d'intérêt, comme l'onde de Rayleigh, sur la trace) s'écrit :
+
+\begin{equation}
+A(f,d) = g(d) R(f) e^{-\frac{\pi f}{Q c} d}
+\end{equation}
+
+Où :
+\begin{itemize}
+    \item $g(d)$ désigne l'atténuation géométrique en fonction de la distance $d$ parcourue par l'onde ;
+    \item $R(f)$ est la réponse en fréquence du système source-détecteur ;
+    \item $c$ est la célérité de l'onde.
+\end{itemize}
+
+La \textbf{Méthode des Rapports Spectraux} nécessite d'abord de corriger l'amplitude $A(f,d)$ pour l'atténuation géométrique $g(d)$ en posant $A'(f,d) = A(f,d)/g(d)$. Le terme correctif $1/g$ est égal à $\sqrt{d}$ pour les ondes de Rayleigh et à $r$ (ou $d$) pour les ondes de volume (onde P).
+
+En utilisant une source reproductible, le spectre corrigé $A'(f,d)$ est mesuré à deux distances distinctes, $d_1$ et $d_2$, correspondant aux offsets $x_1$ et $x_2$. Pour des mesures de surface, la distance parcourue est $d(x) = \sqrt{x^2+4e^2}$ cf Fig.\ref{fig:atenuation}.
+
+\begin{figure}
+    \centering
+    \includegraphics[width=0.9\linewidth]{images/dessin.png}
+    \caption{Mesure de l'atténuation}
+    \label{fig:atenuation}
+\end{figure}
+
+Le rapport spectral s'exprime alors comme suit, la réponse instrumentale $R(f)$ étant éliminée :
+
+\begin{equation}
+\ln \frac{A'(f,d_2)}{A'(f,d_1)} = - \frac{\pi f (d_2-d_1)}{c Q(f)}
+\end{equation}
+
+En traçant le logarithme du rapport d'amplitude en fonction de la fréquence $f$, on obtient une droite si $Q$ est indépendant de la fréquence. Dans ce cas, la valeur de $Q$ est directement déduite de la pente. Si la relation n'est pas linéaire, l'équation permet d'estimer $Q$ pour chaque fréquence.
+
+Afin d'estimer l'erreur, la mesure est répétée avec le même décalage ($d_2-d_1$) mais à différentes paires de positions.
+
+À titre indicatif, les travaux de Filippi \cite{Filippi} sur des résines similaires ont montré des facteurs de qualité pour les ondes de Rayleigh $Q_R$ entre 12 et 15, et pour les ondes P, $Q_P$ entre 30 et 50. Ces valeurs, bien d'indicatives en raison des variations de résine et de l'incertitude de mesure, fournissent un ordre de grandeur attendu.

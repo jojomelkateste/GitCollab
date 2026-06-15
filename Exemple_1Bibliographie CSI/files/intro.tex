@@ -1,0 +1,43 @@
+
+
+L'objectif général de cette thèse s'inscrit dans l'effort global visant à une meilleure gestion de la ressource en eau. Plus spécifiquement, cette thèse aborde les problématiques liées à la cartographie de la composition hydrique de la proche surface. La connaissance précise de la teneur en eau dans le sous-sol est fondamentale pour la compréhension et la modélisation des processus hydrologiques.\par 
+
+Le sol est modélisé comme une matrice solide contenant un réseau de pores (Schmitt, 2015). La composition et les propriétés de ce milieu sont décrites par des paramètres pétrophysiques fondamentaux :
+
+\begin{itemize}
+    \item \textbf{Porosité ($\phi$)}: Représente la proportion du \textbf{volume de vide} ($V_p$) par rapport au \textbf{volume total du milieu} ($V_t$). C'est la fraction du milieu susceptible d'être remplie par un fluide (eau ou air).
+    $$ \phi = \frac{V_p}{V_t} $$
+
+    \item \textbf{Saturation en eau ($S$ ou $S_w$)}: Définit la proportion du \textbf{volume des pores} ($V_p$) qui est \textbf{effectivement occupé par l'eau} ($V_w$).
+    \vspace{0.2cm}
+    $$ S = \frac{V_w}{V_p} $$
+\end{itemize}
+
+L'accès à ces paramètres pétrophysiques en profondeur nécessite l'emploi de méthodes de sondage indirectes: les méthodes Géophysiques. Pour une revue des techniques géophysiques on se référera à \cite{Ruiz_Linde2018} ou encore à \cite{LOISEAU2023}. Parmi les diverses techniques géophysiques, ce travail se concentre sur deux approches principales : l'une basée sur la propagation des ondes mécaniques, et l'autre sur celle des ondes électromagnétiques. L'intérêt de coupler les informations des deux ondes est qu'elles ne sont pas autant sensibles aux deux paramètres. L'onde mécanique est particulièrement sensible à la porosité tandis que l'onde électromagnétique est particulièrement sensible à la saturation en eau, une inversion couplée a donc montré son intérêt \cite{Gao} \cite{didie2024}  \par
+
+Les équations physiques font intervenir des paramètres que l'on va appeler \textbf{paramètres géophysiques}. En mécanique, on retiendra la masse volumique $\rho$, les vitesses des ondes de compressions $v_p$ de cisaillement $v_s$. En électromagnétisme on retiendra la permittivité diélectrique relative $\epsilon_r$ et la conductivité électrique $\sigma$. On peut remonter au paramètres pétrophysiques à l'aide des relations pétrophysiques, cf partie 2.  
+%\textcolor{blue}{FAIRE UN PARAGRAPH SUR LES PARAMETRES GEOPHYSIQUES AUQUELLES SONT SENSIBLES LES ONDES.}
+
+
+L'approche développée s'inscrit dans la continuité des travaux de de l'équipe physique, qui a établi un cadre initial d'\textbf{inversion couplée} mécano-électromagnétique \cite{didie2024}. Le modèle direct utilisé, fondé sur la \textbf{Méthode des Éléments Finis} mis en place au moyen du logiciel commercial COMSOL\textregistered, présente un \textbf{coût computationnel} élevé, limitant l'efficacité des processus itératifs d'inversion.\par 
+
+Notre principal objectif est d'\textbf{accélérer significativement la résolution du problème direct} en exploitant des \textbf{méthodes semi-analytiques}, mais aussi d'améliorer les schémas d'inversion pour gagner en résolution spatiale et en robustesse vis-à-vis du bruit. Cette approche débute par une simplification du modèle géophysique, nécessaire pour l'application de ces méthodes. On supposera dans un premier temps que le sol est un milieu stratifié. L'étape suivante de la recherche visera à s'affranchir de ces contraintes initiales en intégrant les \textbf{séries de Born} pour prendre en compte les hétérogénéités, une revue bibliographique reste à faire sur ce sujet.
+
+À terme, l'ensemble du cadre théorique et numérique développé sera soumis à une \textbf{confrontation expérimentale} de laboratoire, essentielle pour valider la robustesse et la pertinence des résultats de l'inversion en conditions réelles maitrisées, mais aussi par ce que nous aurons une connaissance précise de la composition des échantillons permettant de tester les méthodes inverses sur la base de critères objectifs comme l'écart entre les propriétés des milieux réels et leurs estimations à l'issue des inversions.\par 
+
+Le présent document a une visée bibliographique; il est composé de quatre parties hormis la présente introduction. La première partie est consacrée à la bibliographie sur l'inversion et les relations pétrophysiques. Les deux parties qui suivent sont consacrées au modèle direct semi analytique en électromag et en mécanique. Enfin la bibliographie portant sur la partie expérimentale est présentée.\par 
+
+
+
+
+% %%%%
+% \subsection{Convention utilisés}
+% On choisit un modèle 2D.\par  
+% Dans ce document, la convention de Fourier suivante est prise:
+
+% \begin{equation*}
+%     \begin{cases}
+%             f^\star(\omega,x,z) = \frac{1}{2\pi} \displaystyle \int_{-\infty}^{+\infty} f(t,x,z) e^{+i\omega t}dt \\
+%             \bar{f}(\omega,k_x,z) = \frac{1}{2\pi} \displaystyle \int_{-\infty}^{+\infty} f^\star(\omega,x,z) e^{-ik_x x}dx \\
+%     \end{cases}
+% \end{equation*}

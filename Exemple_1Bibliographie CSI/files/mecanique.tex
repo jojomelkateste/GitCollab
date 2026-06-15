@@ -1,0 +1,240 @@
+%\chapter{Mecanique}
+\section{Mécanique}
+Dans cette partie dans le domaine de Fourier simplement transformée une fonction apparaîtra avec une étoile ($f^\star = f^\star(\omega,x,z)$), la meme fonction dans le domaine doublement transformée apparaitra avec une barre au dessus ($\bar{f}^\star = \bar{f}(\omega,k_x,z)$)
+
+Dans cette partie on étudie la propagation d'une onde mécanique dans un milieu stratifié tel que représenté sur la figure \ref{fig:sol_meca}
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width = 0.9\linewidth]{images/sol_méca.png}
+    \caption{Sol stratifié en mécanique}
+    \label{fig:sol_meca}
+\end{figure}
+
+Afin d'étudier la propagation d'une onde mécanique, nous nous proposons d'analyser le champ de déplacement $\bm{u}$. Dans le cadre du modèle élastique (ou visco-elastique), celui-ci obéit à l'équation de Navier\cite[p.~197]{Chew2022}.
+
+\begin{equation}
+    \lp \lambda + 2\mu \rp \nabla \nabla . \ubm^\star - \mu  \nabla \times \lp \nabla \times \ubm^\star \rp + \omega^2 \rho \ubm^\star = - \fbm^\star 
+\end{equation}
+Où $\fbm^\star $ est une force volumique.\par
+A ce moment là, on a le choix soit on passe par les potentielles de Helmoltz que nous utiliserons par la suite, soit on pose: 
+\begin{align*}
+    \Omegabm &= \nabla \times \ubm^\star \\
+    \theta &= \nabla .  \ubm^\star
+\end{align*}
+
+Qui vérifient les équations de Helmoltz suivantes \cite[p.~197-198]{Chew2022}:
+
+\begin{equation}
+    \begin{cases}
+         \Delta \Omegabm  + k_s^2 \Omegabm  = -\frac{1}{\mu} \nabla \times \fbm^\star  \\
+         \Delta \theta    + k_p^2 \theta    = -\frac{1}{\lambda+2\mu}\nabla.\fbm^\star 
+    \end{cases}
+\end{equation}
+
+Où $k_p^2 = \frac{\omega^2\rho}{\lambda+2\mu}$ et $k_s^2 = \frac{\omega^2\rho}{\mu}$ sont les nombres d'onde des ondes de compression (ondes P) et de cisaillement (ondes S). Les ondes de cisaillement se divisent en deux types : les ondes de cisaillement vertical (SV) $u_{s,z}$ et de cisaillement horizontal (SH) $u_{s,x}$.\par
+
+Une résolution en géométrie 3D dans le cas d'une couche comprise entre deux demi-espaces (half space), est proposé au dernier chapitre du livre \cite{Chew2022}. Cette résolution suit un formalisme de Green très similaire à ce nous venons de présenter pour l'électromagnétique. Cependant ce modèle n'est pas adapté à l'étude d'un sol stratifié, car l'air au-dessus ne répond pas aux équations élastiques (mais acoustique). \par 
+
+Dans la littérature en mécanique, dans certaines configurations, on suppose une surface libre avec une contrainte localisée comme condition aux limites. Pour la résolution, on procède à une décomposition en potentiels de Helmholtz du champ de déplacement: \par
+
+\begin{equation}
+    \ubm^\star = \nabla \phi^\star + \nabla \times \psibm^\star
+\end{equation}
+
+Avec la condition de Jauge $\nabla.\psibm = 0$ (jauge de Coulomb) on montre que les potentiels vérifient les équations de Helmoltz \cite{JONES}: 
+
+\begin{equation}
+    \begin{cases}
+         \Delta \phi^\star    + k_p^2 \phi^\star    = 0 \\
+         \Delta \psi^\star    + k_s^2 \psi^\star   = 0 \\
+    \end{cases}
+    \label{eq:phi_eq}
+\end{equation}
+
+Notez qu'ici le potentiel vecteur est scalaire car on peut montrer que $\psibm^\star = \psi^\star \ey$.\par 
+
+Comme en électromagnétisme, il y a conservation de $k_x$ la composante horizontale du vecteur d'onde. C'est pourquoi nous appliquons la transformée de Fourier aux potentiels par rapport à la coordonnée $x$. Les équations \eqref{eq:phi_eq} deviennent \cite{JONES}:
+
+\begin{equation}
+    \begin{cases}
+         \pderive[2]{\bar{\phi}^\star}{z} + k_{p,z}^2\bar{\phi}^\star = 0 \text{  où  } k_{p,z}^2 = k_p^2-k_x^2 \\ \\
+         \pderive[2]{\bar{\psi}^\star}{z} +  k_{s,z}^2\bar{\psi}^\star =0 \text{  où  } k_{s,z}^2 = k_s^2-k_x^2
+    \end{cases}
+\end{equation}
+
+Les composantes $\kpz$ et $\ksz$ sont prises de parties imaginaires positives ou nulles.
+
+Ces équations, de type oscillateur harmonique, se résolvent dans chaque couche $n$ sous la forme :
+
+\begin{equation*}
+    \begin{cases}
+         \bar{\phi}^\star_n(\omega,k_x,z) = A_n^+(\omega,k_x) e^{+i\kpz z} + A_n^-(\omega,k_x) e^{-i\kpz z} \\ 
+         \bar{\psi}^\star_n(\omega,k_x,z) = B_n^+(\omega,k_x) e^{+i\kpz z} + B_n^-(\omega,k_x) e^{-i\kpz z} \\ 
+    \end{cases}
+\end{equation*}
+
+On posera $\bm{A}_n$ le vecteur que l'on appellera par \textbf{abus de langage }le vecteur des amplitudes (ce qu'il n'est pas dans le cas où Im$(k_z)$ est non nulle):
+
+$$ \bm{A}_n(\omega,k_x) =  \begin{bmatrix} A_n^+ \\ A_n^- \\ B_n^+ \\ B_n^-  \end{bmatrix} $$
+
+
+On cherche donc à résoudre ces équations pour en déduire le champs des déplacements à toutes les interfaces puis partout.Une approche matricielle est nécessaire pour tenir compte du couplage entre les onde P et SV.  Rokhlin et Wang \cite{Rokhlin_Wang} en dénombrent trois que nous allons décrire dans les trois prochaine sous section.
+
+
+
+\subsection{Méthode de la matrice de transfert.}
+
+Comme évoqué plus haut, le problème qui nous intéresse n'est pas, comme en électromagnétique, "l'étude d'une onde se propageant dans un milieu infini homogène isotope rencontrant un half-space stratifié". Il s'agit plutôt d'étudier une onde émise dans où à l'extrémité d un Half-space qui rencontre un half-space stratifié. \par 
+
+Historiquement, ce problème a été étudié pour la première fois par Lord Rayleigh \cite{Rayleigh} en 1885, qui a décrit les ondes se propageant à la surface d'un demi-espace. Il a fallu attendre 1950 pour que les premières équations de propagation des ondes dans un milieu constitué d'un nombre quelconque de couches soient dérivées par Thomson \cite{Tomson}. Une petite erreur a été corrigée trois ans plus tard par Haskell \cite{Haskell}. La description que j'en fais ici est inspirée de celle que l'on peut trouver dans la revue de Lowe \cite{Lowe_review}.\par
+
+On définit le vecteur d'état 
+$$ \bm{V}(\omega,k_x,z) = \begin{bmatrix} \bar{u}^\star \\ \bar{u}^\star_z \\ \bar{\sigma}^\star_{zz} \\ \bar{\sigma}^\star_{xz}  \end{bmatrix}$$
+
+On exprime alors le vecteur d'état en fonction du vecteur des "amplitudes" sous la forme:
+
+\begin{equation}
+    \Vbm(\omega,k_x,z) = D_n(\omega,k_x,z) \Abm_n(\omega,k_x)
+    \label{eq:VDA}
+\end{equation}
+
+Puisque le vecteur des "amplitudes" est constant au sein de chaque couche $n$, on peut exprimer le vecteur d'état de la base d'une couche à celui de son sommet.
+
+\begin{equation*}
+    \ubm_{n,bottom} = D_{n,bottom} D_{n,top}^{-1} \Abm_n
+\end{equation*}
+
+Puis, par continuité du vecteur d'état aux interfaces, nous déduisons le champ à chaque interface en fonction du vecteur d'état à la surface. Le champ est ensuite déduit partout grâce à la relation \eqref{eq:VDA}. Ainsi, nous propageons les champs de la surface vers le reste du demi-espace. C'est pourquoi cette méthode a été baptisée "propagator matrix method" (méthode de la matrice de propagation).\par 
+
+Cette méthode présente cependant un défaut majeur : les matrices sont très mal conditionnées, notamment parce qu'elles contiennent des exponentielles qui divergent lorsque le produit de la fréquence par l'épaisseur de la couche devient grand. On parle alors de "large $fd$ problem" \cite{Lowe_review}. Il est à noter qu'en réarrangeant les équations, Dunkin \cite{Dunkin1965,Lowe_review} a réussi à s'affranchir de ce problème développant une méthode de matrice de transfert modifié qui est inconditionnellement stable.
+
+
+
+\subsection{Méthode de la matrice de raideur}
+
+% Une méthode alternative consiste à réécrire les équation en séparant le déplacement et la contrainte dans des vecteurs différent. Ce qui a le bon goût d'être homogène. Cette méthode a été initialement été développée par Knopoff \cite{Knopoff}.\par 
+
+% On pose pour chaque couches sauf le half-space, pour lequel il faudra supprimer les deux dernières ligne, les vecteurs: 
+
+Une méthode alternative consiste à réécrire les équations en séparant le déplacement et la contrainte dans des vecteurs différents. Cela a le bon goût d'être homogène. Cette méthode a été initialement développée par Knopoff \cite{Knopoff}.\par
+
+On définit pour chaque couche (sauf pour le demi-espace, pour lequel il faudra supprimer les deux dernières lignes) les vecteurs suivants :\par
+
+\begin{align*}
+    \sigmabm_n &= \begin{bmatrix} \bar{\sigma}^\star_{x}(d_n) \\ i \bar{\sigma}^\star_{z}(d_n)\\  -\bar{\sigma}^\star_{x}(z_{n+1}) \\ -i \bar{\sigma}^\star_{z}(z_{n+1}) \end{bmatrix} &
+    \ubm_n &= \begin{bmatrix} \bar{u}^\star_x(d_n)  \\ i \bar{u}^\star_z(d_n)\\  \bar{u}^\star_x(z_{n+1})  \\ i\bar{u}^\star_z(z_{n+1})\end{bmatrix}
+\end{align*}
+
+Remarquez le signe moins au deux dernière lignes de $\sigmabm_n$ sert plus tard lors de l'empilement des matrices. Le facteur $i$ permet d'avoir des matrices de raideur symétrique \cite{Kausel1981}.
+%n'est pas obligatoire il permet de rendre symétriques certaines matrices dans le cas poro-élastique \cite{DEGRANDE1998}, puisque nous choisissons cette méthode et que je m'inspire du code de mon directeur de thèse qui réalisait les deux physiques (poro et visco-élastique) je préfère le garder.
+
+On exprime les vecteurs $\ubm_n$ et $\sigmabm_n$ en fonction du vecteur des "amplitudes" $A_n$ en prenant soins de mettre les termes exponentiels dans une matrice diagonale.  
+\begin{equation}
+    \begin{cases}
+         \ubm_n      = N_n D_n \Abm_n \\
+         \sigmabm_n  = M_n D_n \Abm_n \\
+    \end{cases}
+\end{equation}
+
+\begin{equation}
+    M_n = \begin{bmatrix}
+         a_3           & a_4           & -a_3\gamma_p & a_4\gamma_s \\ \\ 
+         ia_1          & ia_2          & ia_1\gamma_p & -ia_2 \gamma_s \\  \\ 
+         -a_3\gamma_p  & -a_4\gamma_s  & a_3          & -a_4 \\ \\ 
+         -ia_1\gamma_p & -ia_2\gamma_s & -ia_1        & ia_2  
+    \end{bmatrix} 
+\end{equation}
+
+\begin{equation}
+        N_n = \begin{bmatrix}
+         ik_x             & ik_{s,z}          & ik_x \gamma_p      & -ik_{s,z}\gamma_s \\ \\ 
+         k_{p,z}          & -k_x              & -k_{p,z}\gamma_p  & -k_x    \gamma_s  \\ \\ 
+         ik_x   \gamma_p  & ik_{s,z} \gamma_s & ik_x               & -ik_{s,z} \\ \\
+         k_{p,z} \gamma_p & -k_x  \gamma_s    & -k_{p,z}           & -k_x     
+    \end{bmatrix}
+\end{equation}
+
+
+
+On a aussi $D_n = diag(g_p,g_s,q_p^{-1},g_p^{-1})$
+où 
+\begin{align*}
+    \begin{cases}
+        a_1 = -\lambda k_x^2 - \parenthese{\lambda+2\mu} ik_{p,z}^2 \\
+        a_2 = +2\mu k_x k_{s,z} ~~~~~~\\
+        a_3 = +2\mu k_x k_{p,z} ~~~~~~\\
+        a_4 = \mu \lp k_{s,z}^2 - k_x^2 \rp \\ 
+        \gamma_p = e^{ik_{pz}h_n} \\
+        q_p^{(n)} = e^{-ik_{pz}z_n} =  e^{ik_{pz}|z_n|}  ~~~~~~ \\
+        g_p^{(n)} = q_p^{(n+1)} = e^{ik_{pz}|z_{n+1}|} ~~~~~~
+    \end{cases} 
+\end{align*}
+
+Pour le Half-space, on ne garde que le premier bloc, les matrice sont alors de taille $2\times 2$\par 
+
+Ensuite on exprime pour chaque couche $\sigmabm_n$ en fonction de $\ubm_n$, la matrice $T_n$ qui les lie est appelée matrice de raideur.  
+\begin{equation}
+         \sigmabm_n    = M_n N_n^{-1} \ubm_n = T_n \ubm 
+\end{equation}
+$T_n = M_n N_n^{-1} = \begin{bmatrix}
+  \bar{T}_{11}^{(n)} & \bar{T}_{12}^{(n)} \\ \\
+  \bar{T}_{21}^{(n)} & \bar{T}_{22}^{(n)}
+\end{bmatrix} $ où les "coefficients" introduits sont des matrices pour $n\in[1,N-1]$ et sont des scalaires dans le cas $n=N$.
+Par la suite on "assemble les couches" voici un exemple à trois couches pour comprendre le principe.
+\begin{equation*}
+    \underbrace{
+    \begin{bmatrix}
+         \bar{T}_{11}^{(1)} & \bar{T}_{12}^{(1)}                    & 0 \\ \\ \\
+         \bar{T}_{21}^{(1)} & \bar{T}_{22}^{(1)}+\bar{T}_{11}^{(2)} & \bar{T}_{12}^{(2)}  \\ \\ \\
+         0                  & \bar{T}_{21}^{(2)}                    & \bar{T}_{22}^{(2)}+ T_3 \\
+    \end{bmatrix}
+    }_{T_{e}}
+    \underbrace{
+    \begin{bmatrix}
+         \bar{u_x}(d_1) \\ i\bar{u_z}(d_1) \\ \\  \bar{u_x}(d_2) \\ i\bar{u_z}(d_2)  \\ \\ \bar{u_x}(d_3) \\ i\bar{u_z}(d_3) 
+    \end{bmatrix}}_{\ubm_e} = 
+    \underbrace{
+    \begin{bmatrix}
+         \bar{\sigma}^\star_{x}(d_1) \\ i \bar{\sigma}^\star_{z}(d_1) \\ \\ 0 \\  0 \\ \\ 0 \\ 0
+    \end{bmatrix}}_{\sigmabm_e}
+\end{equation*}
+
+La matrice $T_e$ est appelée matrice de raideur globale. Celle-ci est bandée, on peut donc l'inverser à faible coût en temps. On calcul ainsi les amplitudes à toute les interfaces. \par 
+
+Si le nombre de couches est grand le stockage de la matrice posait problème autrefois quand la mémoire était rare et précieuse ce qui n'est plus le cas aujourd'hui. Une variante de cette méthode est proposée par Rokhlin et Wang \cite{Rokhlin_Wang}. Dans cet article au lieu d'assembler toutes les couches pour inverser une seule grande matrice et calculer le champ partout d'un seul coup, il est proposé de calculer pas à pas le champ des déplacements à chaque interface. Une suite de matrice de raideur de taille fixe (12 par 12 dans l'article pour une géométrie 3D, défini en 4 blocs) est définie avec une relation de récurrence.
+
+
+
+
+
+
+\subsection{TRM methode}
+
+Enfin on peut citer une troisième méthode que Kennett et Kerry ont dérivés de la première et qui consiste à calculer le champ à l'aide des matrices de réflexions et de transmission \cite{Kennett_Kerry} dans le cas d'une source et d'un receveur enfuis. Ces travaux font suite à \cite{Kennett1974}, Kennett donne une méthode itérative pour les calculer. \par 
+%calculer les coefficient de transmission et de réflexions à chaque interface.
+
+
+
+
+Rokhlin et Wang résument bien tout ceci \cite{Rokhlin_Wang}:\par 
+La matrice de transfert (transfer matrix) est définie comme une matrice qui relie les contraintes et les déplacements à la surface supérieures d'une couche à ceux de sa surface inférieures, tandis que la matrice de rigidité (stiffness matrix) relie les contraintes aux surfaces supérieure et inférieure d'une couche aux déplacements. Le propagateur (propagator) est défini comme la matrice qui relie les amplitudes des ondes se propageant vers le haut depuis l'interface à celles se propageant vers le bas, tandis que la matrice de réflexion (reflection matrix) est la matrice des coefficients de réflexion et de transmission définis sur l'interface.\par  
+On peut exprimer la matrice de transfert en fonction de la matrice de rigidité et vice-versa \cite{Rokhlin_Wang}. Frayer et Frazer donnent une relation similaire entre le propagateur et la matrice de réflexion \cite{Fryer_Frazer}.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\subsection{Fonction de Green}
+
+En vue du développement en série de Born pour prendre en compte des inclusions, nous devons considérer une source ponctuelle enterrée. Cela est réalisé à l'aide d'une méthode de la matrice de propagation légèrement modifiée par Franssens et Ghislain \cite{Franssens_Ghislain}. Dans cet article, ils se placent en 2D et considèrent une ligne de force perpendiculaire au plan. On peut noter que cela a également été fait en 3D, notamment par Kausel \cite{Kausel1981}, qui utilise une contrainte ponctuelle $\sigma$ en se basant sur la méthode de la matrice de raideur globale (global stiffness matrix method), ainsi que par Luco et Apsel \cite{Luco_Apsel}, qui s'appuient sur la méthode TRM.\par 
+
+Avec la méthode que nous avons choisie, celle de la matrice de raideur globale, on place une interface artificielle à la position de la source enfouie. On choisit une contrainte ponctuelle. \par 
+%En fait on peut \\
+%Pour sonder un sol à l'aide d'une onde mécanique on imagine taper sur une plaque de largeur $2a$ avec une force linéique $F_L$ ce qui correspond à une contrainte $\sigma = \frac{F_L}{2a} \Pi(x-a)$. On peut trouver ce modèle dans \cite{JONES}. On calcul:
+
+% \begin{equation*}
+%     \bar{\sigma}^\star(\omega,k_x,z) = \delta(\omega) \frac{F_L}{8\pi^2} \operatorname{sinc}{(k_x a)} 
+% \end{equation*}
+
+% Si on suppose $F_L$ indépendant de $a$ (exclue l'hypothèse d une plaque carré), on peut avoir une contrainte ponctuelle et finie. \par 
+% Maintenant ce qui se fait dans la litérature à ce sujet.
+% "La il va faloire regarder tout sur la fonction de Green. A finir"

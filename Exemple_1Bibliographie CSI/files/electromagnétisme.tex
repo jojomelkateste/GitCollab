@@ -1,0 +1,100 @@
+\section{Électromagnétisme}
+
+%Source pour la solution développement en ondes planes \cite{Couto}. Pour le H0 solution \cite{Apple}. Pour l expression du Ricker \cite{mesgouez:hal-00657609}. Le 100 Mhz \cite{pulseekko}. Le $\sigma$ cst \cite{Debye}. Comsol \cite{comsol}. Les pml \cite{Chew1997pml}
+La méthode présentée ici est fortement inspirée du livre \cite{chew1999waves}. Cette section est une reprise de l'article écrit pour la conférence IEEE CAMA (Conference on Antenna Measurements and Applications) que je vais présenter le 19 novembre à Juan-les-Pins. D'autres méthodes existent notamment similaire à celles utilisées en mécaniques, on peut en voir une review dans l'article de conférence \cite{Ursin}. \par 
+
+Le modèle direct est une application qui prend en entrée la distribution de la permittivité diélectrique relative complexe $\varepsilon_r=\varepsilon_r' + i \varepsilon_r'' $ et qui donne en sortie le champ électrique dans l'ensemble du domaine.
+La partie imaginaire de la permittivité relative est liée à la conductivité électrique par la relation $\sigma = \varepsilon_0 \, \omega \, \varepsilon_r''(\omega)$.
+Tout au long de ce travail, la conductivité est supposée être indépendante de la fréquence \cite{Debye,li2009electromagnetic} .\par
+
+Considérons un champ électrique créé par un courant $\bm{J}$ le long de l'axe invariant (nous considérons donc un mode électrique transverse (TE)). Dans le plan (XZ), ce courant peut être modélisé comme une ligne de courant perpendiculaire au plan à la position $\rbm_s =x_s \ex +z_s \ez$. Pour chaque fréquence avec la pulsation $\omega$, $\bm{J}^\star$ s'écrit :
+
+\begin{equation}
+     \bm{J}^\star(\omega,\rbm) = J^\star(\omega) \delta(\rbm-\rbm_s) \ey
+\end{equation}
+
+La propagation du champ électrique est régie par les équations de Maxwell. En régime harmonique, il satisfait l'équation différentielle de Helmoltz :
+
+\begin{equation}
+    \Delta \bm{E}^\star + k^2 \bm{E}^\star = -i\omega\mu_0 \bm{J}^\star
+     \label{eq:Helmoltz}
+\end{equation}
+
+Où $k=\frac{\omega}{c}\sqrt{\varepsilon_r}$ est le nombre d'onde.\par
+
+Dans le cas général où $\varepsilon_r$ est arbitraire, cette équation différentielle peut être résolue en utilisant une méthode par éléments finis. Néanmoins, en première approximation, le sol naturel peut être modélisé comme un milieu stratifié avec des couches d'épaisseur finie. Sous cette hypothèse, $\varepsilon_r$ est une fonction échelon, ce qui permet d'utiliser une méthode semi-analytique pour résoudre l'équation \eqref{eq:Helmoltz}. Nous supposons une homogénéité selon la direction x.\par
+
+À la lumière de ces remarques, nous procédons en assumant que l'espace entier est composé d'un milieu stratifié de couches d'épaisseur finie, insérées entre deux demi-espaces, dont l'un est l'air comme représenté figure \ref{fig:cama}.
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.8\linewidth]{images/cama2.png}
+    \caption{Milieu stratifié}
+    \label{fig:cama}
+\end{figure}
+
+
+%, comme représenté sur la Fig.\ref{fig:strat_media}
+\subsection{Modélisation semi-analytique}
+
+Si le milieu est homogène et isotrope ($\varepsilon_r$ est constante), l'équation \eqref{eq:Helmoltz} peut être résolue de manière analytique \cite{Apple} (voir équation \eqref{eq:Ei}). Dans un cas plus général, cette solution est l'onde incidente :
+
+\begin{equation}
+ \Ebm^\star_i(\omega,\rbm) = - \frac{\omega \mu_0 J^\star(\omega)}{4} \Hankelz{k_1}{\rbm-\rbm_s} \hat{e}_y
+ \label{eq:Ei}
+\end{equation}
+
+Où $H_0^{(1)}$ est la fonction de Hankel de première espèce d'ordre zéro. Elle peut ensuite être développée en ondes planes \cite{Couto} :
+
+\begin{equation}
+\displaystyle \Ebm^\star_i(\omega,\rbm) = - \frac{1}{\pi} \int dk_x A_1 e^{ik_x(x-x_s)} \frac{e^{i k_{1z} |z-z_s| }}{ k_{1z}} \hat{e}_y \label{eq:Ei_integral}
+\end{equation}
+Où $A_1= \frac{\omega \mu_0 J^\star(\omega)}{4}$ et $k_{1z}(k_x) = \sqrt{k_1^2-k_x^2}$ avec $\text{Im}(k_{1z})\ge 0$. \par
+
+Dans chaque milieu (couche ou demi-espace) $n\in \llbracket 1, N \rrbracket$ (1 pour l'air N pour le semi-espace), le champ d'onde total, qui subit des réflexions et transmissions de Fresnel multiples à chaque interface, est représenté par une intégrale (voir équation \eqref{eq:E_integral}) qui somme les contributions des champs d'onde 'descendants' et 'ascendants'.
+Alors que l'onde se propage dans le sol, sa composante de vecteur d'onde horizontal est conservée, ce qui justifie que l'intégrale de l'équation \eqref{eq:E_integral} conserve la même forme que l'équation \eqref{eq:Ei_integral}.
+
+\begin{equation}
+\Ebm^\star_n = - \frac{1}{\pi} \int dk_x (e_n^+(z)+e_n^-(z)) \frac{e^{ik_x(x-x_s)} }{ k_{1z}} \hat{e}_y
+\label{eq:E_integral}
+\end{equation}
+
+Où $e_n^\pm$ prend la forme \cite{chew1999waves} :
+\begin{equation}
+ \begin{cases}
+ e_n^+ = A_n e^{ik_{nz}|z-z_{n-1}|} \\
+e_n^- = e_n^+(z_n) \tR_n e^{-i k_{nz}(z-z_n)}\\
+\end{cases}
+\end{equation}
+Dans cette équation : \par
+\begin{itemize}
+\item $z_0=z_s$ et pour tout $n\in \llbracket 1,N-1 \rrbracket$ $z_n$ fait référence à la coordonnée z de la $n^{eme}$ interface entre deux milieux
+\item $E_n^+(\omega,k_x,z) \equiv \left| \frac{e_n^+}{k_{1z}} \right|$ peut être interprété comme l'amplitude du champ électrique 'descendant', celui qui se propage dans la direction des z croissants.
+\item $E_n^-(\omega,k_x,z) \equiv \left| \frac{e_n^-}{k_{1z}} \right|$ peut être interprété comme l'amplitude du champ électrique 'montant', celui qui se propage dans la direction des z décroissants.
+ \item $\Tilde{R}_n(\omega,k_x) = \left|\frac{e_n^-(\omega,k_x,z_n)}{e_n^+(\omega,k_x,z_n)} \right| = \frac{E_n^-(\omega,k_x,z_n)}{E_n^+(\omega,k_x,z_{n})}$ est un coefficient de réflexion effectif. Par exemple, $\Tilde{R}_1$ est la proportion de l'onde incidente qui se réfléchit effectivement sur l'interface air-sol, en tenant compte de l'onde qui revient du sol.
+\item $A_n(\omega,k_x)$ est un paramètre qui est directement lié à l'amplitude $E_n^+(\omega,k_x,z)$
+\end{itemize}
+
+Les deux paramètres $A_n$ et $\Tilde{R}_n$ peuvent être exprimés en utilisant la continuité du champ électrique aux interfaces selon la méthode de \cite{chew1999waves}.\par
+
+Pour tout $n\in \llbracket 1,N \rrbracket$ :
+
+\begin{equation}
+\tR_n = \frac{R_{n,n+1} + \tR_{n+1} e^{2i k_{n+1,z} h_{n+1}}}{ 1 + \tR_{n+1} R_{n,n+1} e^{2i k_{n+1,z} h_{n+1}}}
+\label{eq:rec_Rn}
+\end{equation}
+
+Pour chaque $k_x$ et pour chaque $n$, $\tR_n$ est calculé de manière récursive en partant de $\tR_{N}=0$ (condition de non retour de l'onde une fois que le milieu stratifié est complètement traversé), et en itérant en sens inverse jusqu'à $\tR_{1}$.\par
+
+Pour tout $n\in \llbracket 2,N \rrbracket$
+
+\begin{align}
+ A_n &= A_{n-1} \frac{T_{n-1,n}e^{ik_{n-1,z} h_{n-1}}}{1+R_{n-1,n} \tR_n e^{2ik_{nz} h_n}} \label{eq:rec_An_2_bis}\\ %\notag
+ &= A_1 \prod_{j=1}^{n-1} \frac{T_{j,j+1} e^{ik_{jz}h_j}}{1+ R_{j,j+1} \Tilde{R}_{j+1}e^{2ik_{j+1,z}h_{j+1}}}
+\label{eq:rec_An_2}
+\end{align}
+%
+
+Où $T_{n-1,n}$ et $R_{n-1,n}$ représentent les coefficients de transmission et de réflexion de Fresnel pour une onde (TE) incidente sur l'interface du milieu $n-1$ vers le milieu $n$. Pour chaque $k_x$ et pour chaque $n$, $A_n$ est calculé de $A^\star_1 =\frac{\omega \mu_0 J}{4}$ à $A_N$ en utilisant l'équation \eqref{eq:rec_An_2_bis}.\par
+
+L'intégrale \eqref{eq:E_integral} peut être calculée pour chaque couche. Nous avons utilisé une méthode d'intégration de Simpson avec 1000 points. Pour $n \ge 2$, le terme $1/k_{1z}$ est une singularité artificielle. En effet, dans le produit montré dans l'équation \eqref{eq:rec_An_2}, le terme $T_1 = \frac{2k_{1z}}{k_{1z}+k_{2z}}$ assure que la singularité est supprimée, car le produit contient l'expression non singulière $\frac{T_1}{k_{1z}} = \frac{2}{k_{1z}+k_{2z}}$. Cependant, la singularité demeure pour $n=1$. Pour la contourner, l'intégrale est calculée en la scindant en deux parties, et un changement de variable est effectué sur chaque partie \cite{Gille_Micolau}.

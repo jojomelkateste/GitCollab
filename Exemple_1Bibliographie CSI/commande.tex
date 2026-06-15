@@ -1,0 +1,310 @@
+
+
+% COMMANDES SOPHISTIQUES. 
+%  \pderive[2]{u}{t} derive seconde de u par rapport a t
+%  \pderive{u}{t} derivée simple
+% 3 arcuments dont le premier est par défaut 1 sinon [valeur]
+\newcommand{\pderive}[3][1]{%
+    \ifnum #1 = 1
+    \frac{\partial #2}{\partial #3}
+    \else
+    \frac{\partial^{#1} #2}{\partial #3^{#1}}
+    \fi
+}
+\newcommand{\myalign}[1]{%
+  \begin{align*}
+    #1
+    \refstepcounter{equation}
+    \tag{\theequation}
+ \end{align*}
+}
+
+\newcommand{\equanum}{\refstepcounter{equation} \tag{\theequation}}
+
+\newcommand{\gfonc}[1]{g_#1 \left( \rbm - \rbm' \right)}
+\newcommand{\ffonc}{\fbm \left( \rbm , \omega \right)}
+%%% AUTRE COMMANDE RACOURCIS 
+%parenthesage
+\newcommand{\parenthese}[1]{\left( #1 \right)}
+\newcommand{\crochet}[1]{\left[ #1 \right]}
+\newcommand{\lp}{\left( }
+\newcommand{\rp}{\right)}
+\newcommand{\lc}{\left[ }
+\newcommand{\rc}{\right] }
+% indice d'un vecteur
+\newcommand{\vindex}[2][i]{ \left( #2 \right)_#1}
+% indice d'un tenseur
+\newcommand{\tindex}[2][ij]{ \left( #2 \right)_{#1} }
+% text divergence; text trace; div avec parenthese; trace avec parentheses 
+\newcommand{\divtxt}{\text{div } }
+\newcommand{\divpar}[1]{\text{div} \left( #1 \right)}
+\newcommand{\tr}{\text{tr } }
+\newcommand{\trpar}[1]{\text{tr} \left( #1 \right)}
+
+% Ecriture en couleur
+%\newcommand{\rouge}[1]{\textcolor{red}{#1}}
+%\definecolor{darkgreen}{rgb}{0.0, 0.5, 0.0}
+
+%vecteur unitaire
+\newcommand{\ex}{\hat{e}_x}
+\newcommand{\ey}{\hat{e}_y}
+\newcommand{\ez}{\hat{e}_z}
+\newcommand{\ei}{\hat{e}_i}
+\newcommand{\ej}{\hat{e}_j}
+\newcommand{\ek}{\hat{e}_k}
+\newcommand{\el}{\hat{e}_l}
+
+\newcommand{\hd}{\hat{d}}
+
+% racourcis de partial
+\newcommand{\px}{\partial_x}
+\newcommand{\ppx}{\partial^2_{x}}
+
+\newcommand{\py}{\partial_y}
+\newcommand{\ppy}{\partial^2_{y}}
+
+\newcommand{\pz}{\partial_z}
+\newcommand{\ppz}{\partial^2_{z}}
+
+%atention pas pi c est deja la lettre grec
+\newcommand{\pj}{\partial_j}
+\newcommand{\ppj}{\partial^2_{j}}
+
+\newcommand{\pk}{\partial_k}
+\newcommand{\ppjk}{\partial^2_{k}}
+
+\newcommand{\Hankelz}[2]{H^{(1)}_0 \left( #1 |#2| \right) }
+%\Hankelz{k}{r} H_0(k|r|) z pour zero 
+%exemple $\Hankelz{k_s}{\rbm}$
+\newcommand{\Hankelun}[2]{H_1^{(1)} \left( #1 |#2| \right) }
+
+\newcommand{\Hois}{\Hankelz{k_s}{\rbm}}
+\newcommand{\Hoic}{\Hankelz{k_c}{\rbm}}
+\newcommand{\Hiis}{\Hankelun{k_s}{\rbm}}
+\newcommand{\Hiic}{\Hankelun{k_c}{\rbm}}
+
+\newcommand{\Hoisp}{\Hankelz{k_s}{\deltarbmp}}
+\newcommand{\Hoicp}{\Hankelz{k_c}{\deltarbmp}}
+\newcommand{\Hiisp}{\Hankelun{k_s}{\deltarbmp}}
+\newcommand{\Hiicp}{\Hankelun{k_c}{\deltarbmp}}
+
+
+\newcommand{\Hoiss}{\Hankelz{k_s}{\deltarbms}}
+\newcommand{\Hoics}{\Hankelz{k_c}{\deltarbms}}
+\newcommand{\Hiiss}{\Hankelun{k_s}{\deltarbms}}
+\newcommand{\Hiics}{\Hankelun{k_c}{\deltarbms}}
+
+\newcommand{\HoiTM}{\Hankelz{k}{\deltarbmp}}
+\newcommand{\HiiTM}{\Hankelun{k}{\deltarbmp}}
+
+\newcommand{\Hoikr}{\Hankelz{k}{r}}
+\newcommand{\Hiikr}{\Hankelun{k}{r}}
+
+\newcommand{\Hoisrho}{\Hankelz{k_s}{\rho}}
+\newcommand{\Hiisrho}{\Hankelun{k_s}{\rho}}
+
+\newcommand{\Hoirho}{\Hankelz{k_s}{\rho}}
+\newcommand{\Hiirho}{\Hankelun{k}{\rho}}
+
+\newcommand{\Hiikrho}{H_1^{(1)}(k\rho)}
+\newcommand{\Hoikrho}{H_0^{(1)}(k\rho)}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%          Commande pour fonction avec parenthese      %%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\newcommand{\deltarbmp}{\rbm-\rbm'}
+\newcommand{\deltarbms}{\rbm-\rbm_s}
+
+
+\newcommand{\deltaofr}{\delta (\rbm)}
+\newcommand{\deltaofx}{\delta (x)}
+\newcommand{\deltaofy}{\delta (y)}
+\newcommand{\deltaofz}{\delta (z)}
+\newcommand{\deltaofdrp}{\delta (\rbm-\rbm')}% dr pour deltar, p pour prime
+\newcommand{\deltaofdrs}{\delta (\rbm-\rbm_s)} % s pour source 
+
+\newcommand{\Jofomega}{J(\omega)}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Calcul tensoriel %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\newcommand{\eij}{\ei \otimes \ej}
+\newcommand{\eii}{\ei \otimes \ei}
+
+
+
+
+
+%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% raccourci pour ecrire en gras
+
+\newcommand{\abm}{\bm{a}}
+\newcommand{\bbm}{\bm{b}}
+\newcommand{\cbm}{\bm{c}}
+\newcommand{\dbm}{\bm{d}}
+\newcommand{\ebm}{\bm{e}}
+\newcommand{\fbm}{\bm{f}}
+\newcommand{\gbm}{\bm{g}}
+\newcommand{\hbm}{\bm{h}}
+\newcommand{\ibm}{\bm{i}}
+\newcommand{\jbm}{\bm{j}}
+\newcommand{\kbm}{\bm{k}}
+\newcommand{\lbm}{\bm{l}}
+\newcommand{\mbm}{\bm{m}}
+\newcommand{\nbm}{\bm{n}}
+\newcommand{\obm}{\bm{o}}
+\newcommand{\pbm}{\bm{p}}
+\newcommand{\qbm}{\bm{q}}
+\newcommand{\rbm}{\bm{r}}
+\newcommand{\sbm}{\bm{s}}
+\newcommand{\tbm}{\bm{t}}
+\newcommand{\ubm}{\bm{u}}
+\newcommand{\vbm}{\bm{v}}
+\newcommand{\wbm}{\bm{w}}
+\newcommand{\xbm}{\bm{x}}
+\newcommand{\ybm}{\bm{y}}
+\newcommand{\zbm}{\bm{z}}
+% majuscule
+\newcommand{\Abm}{\bm{A}}
+\newcommand{\Bbm}{\bm{B}}
+\newcommand{\Cbm}{\bm{C}}
+\newcommand{\Dbm}{\bm{D}}
+\newcommand{\Ebm}{\bm{E}}
+\newcommand{\Fbm}{\bm{F}}
+\newcommand{\Gbm}{\bm{G}}
+\newcommand{\Hbm}{\bm{H}}
+\newcommand{\Ibm}{\bm{I}}
+\newcommand{\Jbm}{\bm{J}}
+\newcommand{\Kbm}{\bm{K}}
+\newcommand{\Lbm}{\bm{L}}
+\newcommand{\Mbm}{\bm{M}}
+\newcommand{\Nbm}{\bm{N}}
+\newcommand{\Obm}{\bm{O}}
+\newcommand{\Pbm}{\bm{P}}
+\newcommand{\Qbm}{\bm{Q}}
+\newcommand{\Rbm}{\bm{R}}
+\newcommand{\Sbm}{\bm{S}}
+\newcommand{\Tbm}{\bm{T}}
+\newcommand{\Ubm}{\bm{U}}
+\newcommand{\Vbm}{\bm{V}}
+\newcommand{\Wbm}{\bm{W}}
+\newcommand{\Xbm}{\bm{X}}
+\newcommand{\Ybm}{\bm{Y}}
+\newcommand{\Zbm}{\bm{Z}}
+
+% lettre grec
+\newcommand{\alphabm}{\bm{\alpha}}
+\newcommand{\betabm}{\bm{\beta}}
+\newcommand{\gammabm}{\bm{\gamma}}
+\newcommand{\deltabm}{\bm{\delta}}
+\newcommand{\epsilonbm}{\bm{\epsilon}}
+\newcommand{\zetabm}{\bm{\zeta}}
+\newcommand{\etabm}{\bm{\eta}}
+\newcommand{\thetabm}{\bm{\theta}}
+\newcommand{\iotabm}{\bm{\iota}}
+\newcommand{\kappabm}{\bm{\kappa}}
+\newcommand{\lambdabm}{\bm{\lambda}}
+\newcommand{\mubm}{\bm{\mu}}
+\newcommand{\nubm}{\bm{\nu}}
+\newcommand{\xibm}{\bm{\xi}}
+\newcommand{\pibm}{\bm{\pi}}
+\newcommand{\rhobm}{\bm{\rho}}
+\newcommand{\sigmabm}{\bm{\sigma}}
+\newcommand{\taubm}{\bm{\tau}}
+\newcommand{\upsilonbm}{\bm{\upsilon}}
+\newcommand{\phibm}{\bm{\phi}}
+\newcommand{\chibm}{\bm{\chi}}
+\newcommand{\psibm}{\bm{\psi}}
+\newcommand{\omegabm}{\bm{\omega}}
+% grec majuscule 
+\newcommand{\Alphabm}{\bm{\Alpha}}
+\newcommand{\Betabm}{\bm{\Beta}}
+\newcommand{\Gammabm}{\bm{\Gamma}}
+\newcommand{\Deltabm}{\bm{\Delta}}
+\newcommand{\Epsilonbm}{\bm{\Epsilon}}
+\newcommand{\Zetabm}{\bm{\Zeta}}
+\newcommand{\Etabm}{\bm{\Eta}}
+\newcommand{\Thetabm}{\bm{\Theta}}
+\newcommand{\Iotambm}{\bm{\Iota}}
+\newcommand{\Kappabm}{\bm{\Kappa}}
+\newcommand{\Lambdabm}{\bm{\Lambda}}
+\newcommand{\Mubm}{\bm{\Mu}}
+\newcommand{\Nubm}{\bm{\Nu}}
+\newcommand{\Xibmbm}{\bm{\Xi}}
+\newcommand{\Pibmbm}{\bm{\Pi}}
+\newcommand{\Rhobm}{\bm{\Rho}}
+\newcommand{\Sigmabm}{\bm{\Sigma}}
+\newcommand{\Taubm}{\bm{\Tau}}
+\newcommand{\Upsilonbm}{\bm{\Upsilon}}
+\newcommand{\Phibm}{\bm{\Phi}}
+\newcommand{\Chibm}{\bm{\Chi}}
+\newcommand{\Psibm}{\bm{\Psi}}
+\newcommand{\Omegabm}{\bm{\Omega}}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%tenseurs
+\newcommand{\tenseur}[1]{\overline{\overline{#1}}}
+
+\newcommand{\oGbm}{\overline{\Gbm}}
+\newcommand{\oIbm}{\overline{\Ibm}}
+
+
+\newcommand{\barrer}[1]{\setuldepth{#1}\st{#1}}
+
+% pour les differentes ondes en mode psv
+
+% les k 
+\newcommand{\kpz}{k_{p,z}}
+\newcommand{\ksz}{k_{s,z}}
+%incident
+
+\newcommand{\kix}{k_{i,x}}
+\newcommand{\kiz}{k_{i,z}}
+\newcommand{\kpi}{k_{P_1}}
+
+\newcommand{\kuz}{k_{1z}}
+\newcommand{\kdz}{k_{2z}}
+
+% Reflechi P
+\newcommand{\kpr}{k_{P_1}}
+\newcommand{\kbmpr}{\kbm_{P_1}}
+\newcommand{\kprz}{k_{P_1,z}}
+% reflechi S
+\newcommand{\ksr}{k_{S_1}}
+\newcommand{\kbmsr}{\kbm_{S_1}}
+\newcommand{\ksrz}{k_{S_1,z}}
+% Transmis P
+\newcommand{\kpt}{k_{P_2}}
+\newcommand{\kbmpt}{\kbm_{P_2}}
+\newcommand{\kptz}{k_{P_2,z}}
+%Transmis S
+\newcommand{\kst}{k_{S_2}}
+\newcommand{\kbmst}{\kbm_{S_2}}
+\newcommand{\kstz}{k_{S_2,z}}
+
+% Les lambda
+\newcommand{\lpi}{\lambda_{P_1}} %incident
+\newcommand{\lsi}{\lambda_{S_1}} %reflechie P
+%doublon
+\newcommand{\lpr}{\lambda_{P_1}} %reflechie P
+
+\newcommand{\lst}{\lambda_{S_2}} %transmis S
+\newcommand{\lpt}{\lambda_{P_2}} %transmis P
+
+%les celerites 
+
+\newcommand{\csi}{c_{S_1}}
+\newcommand{\csr}{c_{S_2}}
+\newcommand{\cpi}{c_{P_1}}
+\newcommand{\cpr}{c_{P_2}}
+
+\newcommand{\tR}{\Tilde{R}}
+\newcommand{\tT}{\Tilde{T}}
+\newcommand{\tS}{\Tilde{S}}
+\newcommand{\tphi}{\Tilde{\phi}}
+\newcommand{\tpsi}{\Tilde{\psi}}
+\newcommand{\tsigma}{\Tilde{\sigma}}
+\newcommand{\sigmatilde}{\tsigma}
+\newcommand{\phitilde}{\Tilde{\phi}}
+\newcommand{\psitilde}{\Tilde{\psi}}
+
