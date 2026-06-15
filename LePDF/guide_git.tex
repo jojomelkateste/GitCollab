@@ -88,6 +88,9 @@ git config --local core.editor "nano"
 git config --global core.autocrlf input   # sous Linux/Mac
 git config --global core.autocrlf true    # sous Windows
 
+# Les outils de merge ont tendance a creer des fichier de Backup dont on ne veut pas
+git config --global mergetool.keepBackup false
+
 # A faire quand vous creer un git pour la premiere fois
 cd dossier
 git init -b main #option 
@@ -444,7 +447,7 @@ Lecture~:
 %-------------------------------------------------------------------
 \section{Résoudre un conflit, étape par étape}
 \label{sec:resoudre}
-
+Des outils graphiques existent pour résoudre les conflit. Se référé a la section correspondante. 
 \subsection*{Étape 1 --- Identifier les fichiers en conflit}
 
 \begin{lstlisting}[style=bashstyle]
@@ -510,6 +513,101 @@ git mergetool
 (nécessite d'avoir installé \texttt{meld} et configuré \texttt{git config --global merge.tool meld})
 
 Dans les deux cas, le principe reste le même~: choisir/combiner, sauvegarder, puis \texttt{git add} + \texttt{git commit}.
+
+\section*{Résolution d’un conflit Git avec un outil graphique (Meld)}
+
+Lors d’un \texttt{merge} ou d’un \texttt{rebase}, Git peut détecter des conflits
+entre la version locale et la version distante d’un fichier.  
+L’utilisation d’un outil graphique comme \texttt{Meld} facilite grandement la
+résolution de ces conflits.
+
+\subsection*{1. Installation de Meld}
+
+\begin{lstlisting}[style=bashstyle]
+sudo apt install meld
+\end{lstlisting}
+
+Meld est un outil de comparaison visuelle permettant d’afficher côte à côte :
+\begin{itemize}
+	\item la version locale (LOCAL),
+	\item la version distante (REMOTE),
+	\item la version commune avant divergence (BASE),
+	\item et la version fusionnée (MERGED).
+\end{itemize}
+
+\subsection*{2. Configuration de Git pour utiliser Meld}
+
+\begin{lstlisting}[style=bashstyle]
+git config --global merge.tool meld
+git config --global mergetool.prompt false
+git config --global mergetool.keepBackup false
+\end{lstlisting}
+
+\begin{itemize}
+	\item \texttt{merge.tool} : définit l’outil graphique utilisé.
+	\item \texttt{mergetool.prompt} : évite les confirmations inutiles.
+	\item \texttt{keepBackup=false} : empêche Git de créer des fichiers temporaires
+	comme \texttt{readme\_LOCAL\_XXXX.md}.
+\end{itemize}
+
+\subsection*{3. Lancer la résolution du conflit}
+
+\begin{lstlisting}[style=bashstyle]
+git mergetool
+\end{lstlisting}
+
+Git ouvre Meld et affiche les différentes versions du fichier en conflit.
+L’utilisateur choisit visuellement quelles parties conserver.
+
+\subsection*{4. Vérifier l’état du rebase ou du merge}
+
+\begin{lstlisting}[style=bashstyle]
+git status
+\end{lstlisting}
+
+Si tous les conflits sont résolus, Git indique :
+
+\begin{quote}
+	\texttt{all conflicts fixed: run "git rebase --continue"}
+\end{quote}
+
+\subsection*{5. Valider la résolution}
+
+\begin{lstlisting}[style=bashstyle]
+git add readme.md
+git rebase --continue
+\end{lstlisting}
+
+Git rejoue alors le commit en cours et poursuit le rebase.
+
+\subsection*{6. Nettoyage des fichiers temporaires}
+
+Si des fichiers comme \texttt{readme\_LOCAL\_XXXX.md} restent visibles,
+ils peuvent être supprimés manuellement :
+
+\begin{lstlisting}[style=bashstyle]
+rm readme_*_XXXX.md
+\end{lstlisting}
+
+\subsection*{7. Vérification finale}
+
+\begin{lstlisting}[style=bashstyle]
+git status
+\end{lstlisting}
+
+L’arbre de travail doit être propre :
+
+\begin{quote}
+	\texttt{nothing to commit, working tree clean}
+\end{quote}
+
+\subsection*{8. Publication de la branche}
+
+\begin{lstlisting}[style=bashstyle]
+git push
+\end{lstlisting}
+
+La branche distante est maintenant mise à jour avec la version corrigée.
 
 %-------------------------------------------------------------------
 \section{Annuler une fusion en cours}
