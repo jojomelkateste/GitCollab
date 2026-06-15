@@ -150,8 +150,11 @@ Voici les commandes essentielles pour gérer vos branches au quotidien :
 
 \begin{lstlisting}[style=bashstyle]
 # 1. Creer une nouvelle branche et basculer dessus
-# Remplacez "nom-ma-branche" par votre prenom (ex: git checkout -b pierre)
-git checkout -b nom-ma-branche
+git branch nom-ma-branche # branche cree 
+git switch  nom-ma-branche
+# Ou directement 
+git switch -c nom-ma-branche
+# L'option "-c" signifie "create". 
 
 # 2. Envoyer votre branche sur le serveur POUR LA PREMIERE FOIS
 # L'option "-u" lie votre branche locale au serveur. Les fois suivantes, un simple "git push" suffira.
@@ -161,16 +164,27 @@ git push -u origin nom-ma-branche
 git branch
 
 # 4. Revenir sur une branche existante (si vous avez change entre temps)
-git checkout nom-ma-branche
+# Grace a "git switch", Git vous bloquera avec un message d'erreur si vous avez des modifications non validees qui risquent d'etre perdues.
+git switch nom-ma-branche
 
 # 5. Supprimer une branche (une fois votre travail fusionne dans le main par le responsable)
-# On se remet d'abord sur une autre branche (ex: main)
-git checkout main
+# On se remet d'abord sur la branche principale
+git switch main
 # Puis on supprime la branche localement
 git branch -d nom-ma-branche
 # (Optionnel) Supprimer la branche sur le serveur distant
 git push origin --delete nom-ma-branche
+
+#On peut egalement fusionner des branches s'il n'y a aucun conflit 
+# on se place sur la branch qui va recevoir les infos
+git merge branch-a-fusionner
+# en cas de conflit se referer a la section resolution de conflit 
+# Finaliser la fusion une fois que tous les conflits sont resolus :
+git merge --continue
+# REMARQUE : Si vous etes perdu et voulez tout annuler pour revenir a l'etat initial :
+git merge --abort
 \end{lstlisting}
+
 
 \subsection*{Mettre à jour sa branche par rapport au main}
 Avant de demander au responsable de fusionner votre travail dans le \texttt{main}, vous devez vous assurer que votre branche intègre les dernières nouveautés du projet. Pour cela, utilisez cette commande depuis votre branche :
@@ -223,7 +237,7 @@ git push
 git log --oneline --graph --all   # historique condense avec les branches
 git diff                          # differences non encore "add"
 git diff --staged                 # differences deja "add" mais pas commit
-git show <hash>                   # contenu d'un commit donne
+git show <hash>                   # contenu d'un commit donne, q pour quitter l interface
 git restore <fichier>             # annule les modifs locales d'un fichier non commite
 \end{lstlisting}
 
@@ -304,28 +318,28 @@ git push
 Si \texttt{git pull} indique que des fichiers ont changé en même temps que les vôtres, Git tente une \textbf{fusion automatique}. Dans la grande majorité des cas (fichiers découpés + une phrase par ligne), cette fusion se fait sans aucune intervention. Le conflit n'apparaît que si \textbf{la même ligne} a été modifiée différemment des deux côtés.
 
 %-------------------------------------------------------------------
-\section{Branches~: pour les changements plus importants}
+%\section{Branches~: pour les changements plus importants}
+%
+%Une branche permet de travailler « à côté » sans toucher à la version de référence (\texttt{main}), puis de fusionner quand le travail est prêt.
+%
+%\begin{lstlisting}[style=bashstyle]
+%git switch -c restructuration-section3   # cree et bascule sur une nouvelle branche
+%# ... travail ...
+%git add -A
+%git commit -m "Restructuration de la section 3"
+%git push -u origin restructuration-section3
+%\end{lstlisting}
+%
+%Ensuite, fusion dans \texttt{main}~:
+%
+%\begin{lstlisting}[style=bashstyle]
+%git switch main
+%git pull
+%git merge restructuration-section3
+%git push
+%\end{lstlisting}
 
-Une branche permet de travailler « à côté » sans toucher à la version de référence (\texttt{main}), puis de fusionner quand le travail est prêt.
-
-\begin{lstlisting}[style=bashstyle]
-git switch -c restructuration-section3   # cree et bascule sur une nouvelle branche
-# ... travail ...
-git add -A
-git commit -m "Restructuration de la section 3"
-git push -u origin restructuration-section3
-\end{lstlisting}
-
-Ensuite, fusion dans \texttt{main}~:
-
-\begin{lstlisting}[style=bashstyle]
-git switch main
-git pull
-git merge restructuration-section3
-git push
-\end{lstlisting}
-
-\textbf{Recommandation} pour un groupe peu habitué à Git~: utiliser des branches surtout pour des changements structurels lourds (réorganisation de chapitres, changement de classe de document...), et travailler directement sur \texttt{main} pour les ajouts de contenu courants --- à condition de bien suivre les règles de la section précédente.
+%\textbf{Recommandation} pour un groupe peu habitué à Git~: utiliser des branches surtout pour des changements structurels lourds (réorganisation de chapitres, changement de classe de document...), et travailler directement sur \texttt{main} pour les ajouts de contenu courants --- à condition de bien suivre les règles de la section précédente.
 
 %-------------------------------------------------------------------
 \section{Comprendre un conflit}
