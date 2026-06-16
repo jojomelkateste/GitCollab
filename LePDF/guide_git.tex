@@ -62,7 +62,7 @@
   \item[Commit] Une « photo » de l'état du projet à un instant donné, avec un message descriptif.
   \item[Branche (branch)] Une ligne de développement indépendante (souvent \texttt{main} pour la version de référence).
   \item[Remote] La copie du dépôt hébergée sur un serveur (GitHub, GitLab, Overleaf...).
-  \item[\texttt{origin}] Nom par défaut donné au remote principal.
+  \item[Origin] Nom par défaut donné au remote principal.
   \item[Working directory] Les fichiers tels que vous les voyez sur votre disque.
   \item[Staging area / index] La « salle d'attente » où l'on dépose les modifications avant de les valider par un commit.
   \item[HEAD] Pointeur vers le commit actuel de votre branche.
@@ -151,7 +151,10 @@ Pour travailler efficacement en équipe sans se marcher sur les pieds, nous util
 La règle d'or de notre organisation est la suivante :
 \begin{itemize}
 	\item La branche \texttt{main} (principale) est la version officielle et propre du document. \textbf{Une seule personne la contrôle et centralise les modifications.} Vous ne devez jamais envoyer de modifications directement sur le \texttt{main}.
-	\item \textbf{Chacun possède sa propre branche de travail.} Vous y êtes le seul maître à bord, ce qui élimine à 100\% le risque de voir votre travail écrasé par un collègue.
+	\item \textbf{Chacun possède sa propre branche de travail.} Vous y êtes le seul maître à bord. \textbf{Note :} Les branches personnelles ne sont pas protégées 
+	techniquement, mais la règle collective est de ne jamais intervenir 
+	sur la branche d'un autre. La protection du \texttt{main} reste 
+	la garantie essentielle de l'intégrité du document final. Nous verrons la sécurité aprés.%, ce qui élimine à 100\% le risque de voir votre travail écrasé par un collègue.
 \end{itemize}
 
 Voici les commandes essentielles pour gérer vos branches au quotidien :
@@ -194,7 +197,21 @@ git merge --abort
 \end{lstlisting}
 
 
-Lorsque vous faites un \texttt{git pull} toutes les branches sont téléchargées (correspond aussi à \texttt{git fetch} ) mais seule la branche sur laquelle vous êtes est fusionnée avec celle distante (correspond aussi à \texttt{git merge} ). Ainsi si vous avez plusieurs branches liées à des branches distantes, celles ci ne sont fusionnée. Veuillez refaire un \texttt{git pull} sur chaque branche que vous voulez. Si le dépôt contient des branches que vous n'avez pas en local elle seront cachées, vous pourrez en voir la liste via \texttt{git branch -a}, elles apparaitrons sous la forme \texttt{remotes/origin/NomBranche} 
+Lorsque vous faites un \texttt{git pull} toutes les branches sont téléchargées (correspond aussi à \texttt{git fetch} ) mais seule la branche sur laquelle vous êtes est fusionnée avec celle distante (correspond aussi à \texttt{git merge} ). Ainsi si vous avez plusieurs branches liées à des branches distantes, celles ci ne sont fusionnée. Veuillez refaire un \texttt{git pull} sur chaque branche que vous voulez. Si le dépôt contient des branches que vous n'avez pas en local elle seront cachées, vous pourrez en voir la liste via \texttt{git branch -a}, elles apparaitrons sous la forme \texttt{remotes/origin/NomBranche}
+
+\subsection*{Sécurité}
+
+La branche main est sécurisé, seul le propriétaire peut la fusionné avec une branche en se connectant à gitHub. La solution est de cloner en mode lecture seule via:
+
+\begin{lstlisting}[style=bashstyle]
+git fetch origin branche-collegue
+git checkout FETCH_HEAD
+# on passe alors en mode "detached HEAD"
+# en cas dechec verifiez que vous avez bien sauvegarder vos changement sur la branche locale
+\end{lstlisting}
+
+En faisant ainsi si on essaye de pusher par accident Git répond :
+
 
 \subsection*{Mettre à jour sa branche par rapport au main}
 Avant de demander au responsable de fusionner votre travail dans le \texttt{main}, vous devez vous assurer que votre branche intègre les dernières nouveautés du projet. Pour cela, utilisez cette commande depuis votre branche :
