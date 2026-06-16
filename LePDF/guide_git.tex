@@ -275,7 +275,7 @@ Avant de demander au responsable de fusionner votre travail dans le \texttt{main
 \begin{lstlisting}[style=bashstyle]
 git pull origin main --rebase
 \end{lstlisting}
-Si un conflit apparaît à ce moment-là, résolvez-le tranquillement sur votre machine avant de prévenir le responsable.
+Si un conflit apparaît à ce moment-là, résolvez-le tranquillement sur votre machine avant de me prévenir.
 
 Le main est protégé de mon coté, j'ai configuré github pour n'accepter les push dessus que de la part de moi même. Si par accident vous avez modifié la branche main et voulais dire a git: "oublie tout, ce qui fait fois c'est ce qui est sur le distant" alors on fait. 
 
@@ -771,7 +771,7 @@ latexdiff ancienne_version.tex nouvelle_version.tex > diff.tex
 \end{enumerate}
 
 %-------------------------------------------------------------------
-
+\clearpage
 \section{Exercice collectif}
 \subsection*{Pré-requis : à faire avant la formation}
 
@@ -797,7 +797,7 @@ latexdiff ancienne_version.tex nouvelle_version.tex > diff.tex
 	Si vous souhaitez pouvoir consulter l'interface du dépôt ou 
 	soumettre des Pull Requests par vous-même, créez-en un sur 
 	\url{https://github.com}.}
-\subsection{*exercice}
+\subsection{Exercice}
 Avant de commencer, assurez-vous d'avoir effectué la configuration 
 initiale décrite en section~2 (nom, email, \texttt{pull.rebase}, 
 \texttt{autocrlf}, \texttt{mergetool.keepBackup}).
@@ -853,19 +853,19 @@ git merge main
 	\setcounter{enumi}{8} % adapter selon le numero de ta derniere etape
 	\item \textbf{Exercice 2 — Provoquer et résoudre un conflit}
 	
-	Le responsable a créé une branche \texttt{conflitTest} contenant 
+	J'ai créé une branche \texttt{conflitTest} contenant 
 	un fichier avec une ligne à modifier. Récupérez-la et basculez dessus :
 	\begin{lstlisting}[style=bashstyle]
 git fetch origin
 git switch -c conflitTest origin/conflitTest
 	\end{lstlisting}
-	Modifiez la ligne indiquée par le responsable, puis commitez 
+	Modifiez la ligne que je vous indiquerai par, puis commitez 
 	\textbf{sans pusher} :
 	\begin{lstlisting}[style=bashstyle]
 git add -A
 git commit -m "modification de prenom-nom"
 	\end{lstlisting}
-	Prévenez le responsable que vous avez commité. Il va alors pousser 
+	Prévenez moi que vous avez commité. Je vais alors pousser 
 	sa propre modification sur \texttt{conflitTest}. Tentez ensuite 
 	de pousser votre version :
 	\begin{lstlisting}[style=bashstyle]
@@ -907,7 +907,7 @@ git push --force-with-lease
 		\texttt{--force} car il vérifie que personne d'autre n'a pushé 
 		entre temps.}
 	
-	Le responsable met alors sa branche à jour avec votre version :
+	Je mets alors sa branche à jour avec votre version :
 	\begin{lstlisting}[style=bashstyle]
 git fetch origin
 git reset --hard origin/conflitTest
@@ -915,7 +915,7 @@ git reset --hard origin/conflitTest
 	\textit{Rappel : un conflit n'est pas une catastrophe. Tout le travail 
 		des deux personnes est conservé --- il faut juste décider comment 
 		les combiner.}
-	\item \textbf{[Exercice 3 — Consulter la branche d'un collègue]}
+	\item \textbf{Exercice 3 — Consulter la branche d'un collègue}
 	
 	Choisissez le prénom d'un voisin et récupérez sa branche en mode lecture seule :
 	\begin{lstlisting}[style=bashstyle]
@@ -940,7 +940,7 @@ git push -u origin proposition-prenom-nom
 	\end{lstlisting}
 	Votre collègue peut alors consulter votre proposition sur GitHub dans l'onglet \emph{branches}.
 	
-	\item \textbf{[Exercice 4 — Retrouver un commit perdu]}
+	\item \textbf{Exercice 4 — Retrouver un commit perdu}
 	
 	Le responsable va introduire une erreur volontaire dans votre fichier et la commiter sur \texttt{main}. Mettez d'abord votre branche à jour :
 	\begin{lstlisting}[style=bashstyle]
