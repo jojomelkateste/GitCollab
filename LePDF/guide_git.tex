@@ -62,7 +62,7 @@
   \item[Commit] Une « photo » de l'état du projet à un instant donné, avec un message descriptif.
   \item[Branche (branch)] Une ligne de développement indépendante (souvent \texttt{main} pour la version de référence).
   \item[Remote] La copie du dépôt hébergée sur un serveur (GitHub, GitLab, Overleaf...).
-  \item[\texttt{origin}] Nom par défaut donné au remote principal.
+  \item[Origin] Nom par défaut donné au remote principal.
   \item[Working directory] Les fichiers tels que vous les voyez sur votre disque.
   \item[Staging area / index] La « salle d'attente » où l'on dépose les modifications avant de les valider par un commit.
   \item[HEAD] Pointeur vers le commit actuel de votre branche.
@@ -146,62 +146,136 @@ Cette commande (git clone) télécharge tout l'historique et crée un dossier de
 
 \section{Les branches}
 
-Pour travailler efficacement en équipe sans se marcher sur les pieds, nous utilisons un système de \textbf{branches}. Une branche est une version parallèle du projet dans laquelle vous pouvez travailler librement sans impacter le document principal.
+Pour travailler efficacement en équipe sans se marcher sur les pieds, 
+nous utilisons un système de \textbf{branches}. Une branche est une 
+version parallèle du projet dans laquelle vous pouvez travailler 
+librement sans impacter le document principal.
 
 La règle d'or de notre organisation est la suivante :
 \begin{itemize}
-	\item La branche \texttt{main} (principale) est la version officielle et propre du document. \textbf{Une seule personne la contrôle et centralise les modifications.} Vous ne devez jamais envoyer de modifications directement sur le \texttt{main}.
-	\item \textbf{Chacun possède sa propre branche de travail.} Vous y êtes le seul maître à bord, ce qui élimine à 100\% le risque de voir votre travail écrasé par un collègue.
+	\item La branche \texttt{main} est la version officielle et propre 
+	du document. \textbf{Une seule personne la contrôle et centralise 
+		les modifications.} Vous ne devez jamais y envoyer de modifications 
+	directement.
+	\item \textbf{Chacun possède sa propre branche de travail.} 
+	Les branches personnelles ne sont pas protégées techniquement, 
+	mais la règle collective est de ne jamais intervenir sur la branche 
+	d'un autre. Nous verrons comment consulter le travail d'un collègue 
+	en toute sécurité dans la section suivante.
 \end{itemize}
 
-Voici les commandes essentielles pour gérer vos branches au quotidien :
+\subsection*{Créer et naviguer entre les branches}
 
 \begin{lstlisting}[style=bashstyle]
-# 1. Creer une nouvelle branche et basculer dessus
-git branch nom-ma-branche # branche cree 
-git switch  nom-ma-branche # on y bascule
-# Ou directement 
-git switch -c nom-ma-branche
-# L'option "-c" signifie "create". 
-
-# 2. Envoyer votre branche sur le serveur POUR LA PREMIERE FOIS
-# L'option "-u" lie votre branche locale au serveur. Les fois suivantes, un simple "git push" suffira.
-git push -u origin nom-ma-branche
-
-# 3. Voir sur quelle branche vous vous trouvez actuellement
-git branch
-
-# 4. Revenir sur une branche existante (si vous avez change entre temps)
-# Grace a "git switch", Git vous bloquera avec un message d'erreur si vous avez des modifications non validees qui risquent d'etre perdues.
-git switch nom-ma-branche
-
-# 5. Supprimer une branche (une fois votre travail fusionne dans le main par le responsable)
-# On se remet d'abord sur la branche principale
-git switch main
-# Puis on supprime la branche localement
-git branch -d nom-ma-branche
-# (Optionnel) Supprimer la branche sur le serveur distant
-git push origin --delete nom-ma-branche
-
-#On peut egalement fusionner des branches s'il n'y a aucun conflit 
-# on se place sur la branch qui va recevoir les infos
-git merge branch-a-fusionner
-# en cas de conflit se referer a la section resolution de conflit 
-# Finaliser la fusion une fois que tous les conflits sont resolus :
-git merge --continue
-# REMARQUE : Si vous etes perdu et voulez tout annuler pour revenir a l'etat initial :
-git merge --abort
+	# 1. Creer une nouvelle branche et basculer dessus
+	git branch nom-ma-branche # branche cree 
+	git switch  nom-ma-branche # on y bascule
+	# Ou directement creer une nouvelle branche et basculer dessus
+	git switch -c nom-ma-branche
+	# L'option "-c" signifie "create"
+	
+	# Voir sur quelle branche vous vous trouvez
+	git branch
+	
+	# Basculer sur une branche existante
+	# Git vous bloquera si vous avez des modifications non validees
+	git switch nom-ma-branche
 \end{lstlisting}
 
+\subsection*{Publier et supprimer une branche}
 
-Lorsque vous faites un \texttt{git pull} toutes les branches sont téléchargées (correspond aussi à \texttt{git fetch} ) mais seule la branche sur laquelle vous êtes est fusionnée avec celle distante (correspond aussi à \texttt{git merge} ). Ainsi si vous avez plusieurs branches liées à des branches distantes, celles ci ne sont fusionnée. Veuillez refaire un \texttt{git pull} sur chaque branche que vous voulez. Si le dépôt contient des branches que vous n'avez pas en local elle seront cachées, vous pourrez en voir la liste via \texttt{git branch -a}, elles apparaitrons sous la forme \texttt{remotes/origin/NomBranche} 
+\begin{lstlisting}[style=bashstyle]
+	# Envoyer votre branche sur le serveur pour la premiere fois
+	# L'option "-u" lie votre branche locale au serveur.
+	# Les fois suivantes, un simple "git push" suffira.
+	git push -u origin nom-ma-branche
+	
+	# Supprimer une branche une fois votre travail fusionne dans main
+	git switch main                          # revenir sur main d'abord
+	git branch -d nom-ma-branche             # supprimer localement
+	git push origin --delete nom-ma-branche  # supprimer sur le serveur
+\end{lstlisting}
+
+\subsection*{Fusionner des branches}
+
+\begin{lstlisting}[style=bashstyle]
+	# Se placer sur la branche qui va recevoir les modifications
+	git switch ma-branche
+	# Fusionner une autre branche dedans
+	git merge branche-a-fusionner
+	
+	# En cas de conflit, se referer a la section resolution de conflits
+	# Une fois tous les conflits resolus, finaliser :
+	git merge --continue
+	
+	# Si vous etes perdu et voulez tout annuler :
+	git merge --abort
+\end{lstlisting}
+
+\subsection*{Synchronisation avec le serveur}
+
+\texttt{git fetch origin} télécharge l'état de toutes les branches 
+distantes \textbf{sans modifier quoi que ce soit localement} : c'est 
+une simple mise à jour de l'information. \texttt{git pull} va plus 
+loin : il effectue un \texttt{fetch} puis fusionne automatiquement 
+la branche distante dans votre branche courante (via \texttt{merge} 
+ou \texttt{rebase} selon votre configuration), \textbf{mais uniquement 
+	pour la branche sur laquelle vous vous trouvez}. Si vous avez plusieurs 
+branches locales, chacune doit être mise à jour séparément avec un 
+\texttt{git pull} depuis cette branche.
+
+Pour voir toutes les branches disponibles sur le serveur, y compris 
+celles que vous n'avez pas encore en local :
+
+\begin{lstlisting}[style=bashstyle]
+	git branch -a
+	# Les branches distantes apparaissent sous la forme :
+	#   remotes/origin/NomBranche
+\end{lstlisting}
+
+\section{OLDLes branches}
+
+
+\subsection*{Sécurité}
+
+La branche \texttt{main} est protégée : seul le propriétaire peut y fusionner des modifications, 
+via une \textit{Pull Request} sur GitHub.
+
+Pour consulter la branche d'un collègue \textbf{sans risque d'y écrire accidentellement}, 
+utilisez la procédure suivante :
+
+\begin{lstlisting}[style=bashstyle]
+git fetch origin branche-collegue
+git checkout FETCH_HEAD
+	# Vous etes maintenant en mode "detached HEAD"
+	# Si cette commande echoue, sauvegardez d'abord vos modifications locales
+\end{lstlisting}
+
+En mode \textit{detached HEAD}, toute tentative de \texttt{push} est bloquée par Git : 
+vous ne pouvez pas modifier la branche de votre collègue, même par inadvertance.
+
+Si vous souhaitez proposer des modifications à partir de cette consultation, 
+créez une branche locale depuis cet état :
+
+\begin{lstlisting}[style=bashstyle]
+	git checkout -b ma-proposition
+\end{lstlisting}
+
+Revenez ensuite sur votre branche de travail et fusionnez-y cette proposition :
+
+\begin{lstlisting}[style=bashstyle]
+	git checkout ma-branche
+	git merge ma-proposition
+\end{lstlisting}
+
+Vos collègues peuvent alors consulter vos suggestions sur votre branche. 
 
 \subsection*{Mettre à jour sa branche par rapport au main}
 Avant de demander au responsable de fusionner votre travail dans le \texttt{main}, vous devez vous assurer que votre branche intègre les dernières nouveautés du projet. Pour cela, utilisez cette commande depuis votre branche :
 \begin{lstlisting}[style=bashstyle]
 git pull origin main --rebase
 \end{lstlisting}
-Si un conflit apparaît à ce moment-là, résolvez-le tranquillement sur votre machine avant de prévenir le responsable.
+Si un conflit apparaît à ce moment-là, résolvez-le tranquillement sur votre machine avant de me prévenir.
 
 Le main est protégé de mon coté, j'ai configuré github pour n'accepter les push dessus que de la part de moi même. Si par accident vous avez modifié la branche main et voulais dire a git: "oublie tout, ce qui fait fois c'est ce qui est sur le distant" alors on fait. 
 
@@ -521,7 +595,7 @@ git mergetool
 
 Dans les deux cas, le principe reste le même~: choisir/combiner, sauvegarder, puis \texttt{git add} + \texttt{git commit}.
 
-\section*{Résolution d’un conflit Git avec un outil graphique (Meld)}
+\subsection*{Résolution d’un conflit Git avec un outil graphique (Meld)}
 
 Lors d’un \texttt{merge} ou d’un \texttt{rebase}, Git peut détecter des conflits
 entre la version locale et la version distante d’un fichier.  
@@ -697,18 +771,202 @@ latexdiff ancienne_version.tex nouvelle_version.tex > diff.tex
 \end{enumerate}
 
 %-------------------------------------------------------------------
-\section{Petit exercice pour la formation}
-
-Crée 
+\clearpage
+\section{Exercice collectif}
+\subsection*{Pré-requis : à faire avant la formation}
 
 \begin{enumerate}
-\item Crée une clef ssh : \verb|ssh-keygen -t ed25519 -C "ton_email@exemple.com"| regardez la ou est la clef est afficher la. exemple \verb|cat /c/Users/melka/.ssh/id_ed25519.pub| me la transmettre pour vous autoriser à cloner le dépôt. 
+	\item Installer Git : \url{https://git-scm.com/downloads}
+	\item Installer Meld : \texttt{sudo apt install meld} (Linux) 
+	ou \url{https://meldmerge.org} (Windows)
+	\item Installer Git LFS (\url{https://git-lfs.com}), 
+	puis l'activer dans votre terminal :
+	\texttt{git lfs install}
+	\item Exécuter la configuration initiale (section~2 de ce guide)
+	
+	\item Créez une clef SSH et affichez-la :
+	\begin{lstlisting}[style=bashstyle]
+		ssh-keygen -t ed25519 -C "ton_email@exemple.com"
+		cat ~/.ssh/id_ed25519.pub  % ex: /c/Users/melka/.ssh/id_ed25519.pub
+	\end{lstlisting}
+	Transmettez-moi la clef affichée pour que je vous autorise à cloner le dépôt.
 
-  \item Aller dans un dossier et cloner le projet \verb|git clone git@github.com:jojomelkateste/GitCollab.git|
-  
-  \item Créé vous une branche et travailler dessus pour tout tester. 
 \end{enumerate}
 
+\textit{Un compte GitHub n'est pas nécessaire pour cet exercice. 
+	Si vous souhaitez pouvoir consulter l'interface du dépôt ou 
+	soumettre des Pull Requests par vous-même, créez-en un sur 
+	\url{https://github.com}.}
+\subsection{Exercice}
+Avant de commencer, assurez-vous d'avoir effectué la configuration 
+initiale décrite en section~2 (nom, email, \texttt{pull.rebase}, 
+\texttt{autocrlf}, \texttt{mergetool.keepBackup}).
+
+Le dossier \texttt{Exercice\_collab} contient un fichier \texttt{main.tex} 
+qui assemble les fichiers \LaTeX{} de chaque participant (créés en direct). 
+L'objectif est de simuler un vrai travail collaboratif dans un cadre sans enjeu, 
+afin de dérouler une fois la procédure complète avant de l'appliquer sur le projet réel.
+	
+\begin{enumerate}
+	\item Placez-vous dans le dossier souhaité et clonez le projet :
+	\begin{lstlisting}[style=bashstyle]
+git clone git@github.com:jojomelkateste/GitCollab.git
+	\end{lstlisting}
+	
+	\item Créez votre branche personnelle et basculez dessus :
+	\begin{lstlisting}[style=bashstyle]
+git switch -c prenom-nom
+	\end{lstlisting}
+	
+	\item Consultez le dossier \texttt{Exercice\_collab/Ressources} : j'y aurai au préalable 
+	déposé un fichier \LaTeX{} à votre nom. Si ce n'est pas encore le cas, attendez puis 
+	mettez votre dépôt à jour :
+	\begin{lstlisting}[style=bashstyle]
+git pull origin main
+git merge main
+	\end{lstlisting}
+	
+	\item Réalisez vos modifications dans votre fichier \LaTeX{}, puis sauvegardez-les.
+	Veillez à ne modifier \textbf{aucun autre fichier} :
+	\begin{lstlisting}[style=bashstyle]
+git add -A
+git commit -m "description de mes modifications"
+	\end{lstlisting}
+	
+	\item Publiez votre branche sur le dépôt distant :
+	\begin{lstlisting}[style=bashstyle]
+git push -u origin prenom-nom
+	\end{lstlisting}
+	
+	\item Je récupérerai alors vos contributions et les fusionnerai dans \texttt{main} :
+	\begin{lstlisting}[style=bashstyle]
+git checkout ma-branche
+git fetch origin
+git merge origin/branche-collegue
+	\end{lstlisting}
+	
+	\item Une fois la fusion effectuée, mettez votre branche locale à jour :
+	\begin{lstlisting}[style=bashstyle]
+git pull origin main
+git merge main
+	\end{lstlisting}
+	\setcounter{enumi}{8} % adapter selon le numero de ta derniere etape
+	\item \textbf{Exercice 2 — Provoquer et résoudre un conflit}
+	
+	J'ai créé une branche \texttt{conflitTest} contenant 
+	un fichier avec une ligne à modifier. Récupérez-la et basculez dessus :
+	\begin{lstlisting}[style=bashstyle]
+git fetch origin
+git switch -c conflitTest origin/conflitTest
+	\end{lstlisting}
+	Modifiez la ligne que je vous indiquerai par, puis commitez 
+	\textbf{sans pusher} :
+	\begin{lstlisting}[style=bashstyle]
+git add -A
+git commit -m "modification de prenom-nom"
+	\end{lstlisting}
+	Prévenez moi que vous avez commité. Je vais alors pousser 
+	sa propre modification sur \texttt{conflitTest}. Tentez ensuite 
+	de pousser votre version :
+	\begin{lstlisting}[style=bashstyle]
+git push
+	\end{lstlisting}
+	Git refuse et vous indique que la branche distante a avancé :
+	\begin{lstlisting}[style=plainstyle]
+! [rejected] conflitTest -> conflitTest (non-fast-forward)
+hint: Updates were rejected because the tip of your current 
+branch is behind its remote counterpart.
+	\end{lstlisting}
+	Récupérez les modifications distantes sans fusionner automatiquement, 
+	puis lancez le rebase :
+	\begin{lstlisting}[style=bashstyle]
+git fetch origin
+git rebase origin/conflitTest
+	\end{lstlisting}
+	Git interrompt le rebase et signale le conflit :
+	\begin{lstlisting}[style=plainstyle]
+CONFLICT (content): Merge conflict in conflitTest.tex
+error: could not apply ... votre commit
+	\end{lstlisting}
+	Lancez Meld pour résoudre le conflit visuellement :
+	\begin{lstlisting}[style=bashstyle]
+git mergetool
+	\end{lstlisting}
+	Dans Meld, conservez \textbf{votre version} (panneau LOCAL), 
+	sauvegardez, puis finalisez le rebase :
+	\begin{lstlisting}[style=bashstyle]
+git rebase --continue
+	\end{lstlisting}
+	Vérifiez que tout est propre puis poussez :
+	\begin{lstlisting}[style=bashstyle]
+git status   % doit afficher : nothing to commit, working tree clean
+git push --force-with-lease
+	\end{lstlisting}
+	\textit{Le \texttt{--force-with-lease} est nécessaire après un rebase 
+		car l'historique local a été réécrit. Il est plus sûr que 
+		\texttt{--force} car il vérifie que personne d'autre n'a pushé 
+		entre temps.}
+	
+	Je mets alors sa branche à jour avec votre version :
+	\begin{lstlisting}[style=bashstyle]
+git fetch origin
+git reset --hard origin/conflitTest
+	\end{lstlisting}
+	\textit{Rappel : un conflit n'est pas une catastrophe. Tout le travail 
+		des deux personnes est conservé --- il faut juste décider comment 
+		les combiner.}
+	\item \textbf{Exercice 3 — Consulter la branche d'un collègue}
+	
+	Choisissez le prénom d'un voisin et récupérez sa branche en mode lecture seule :
+	\begin{lstlisting}[style=bashstyle]
+git fetch origin
+git checkout origin/prenom-collegue
+# Vous etes maintenant en mode "detached HEAD"
+# Vous pouvez lire et compiler, mais pas ecrire sur sa branche
+	\end{lstlisting}
+	Compilez le document et gardez le PDF de côté pour le comparer avec le vôtre. 
+	Revenez ensuite sur votre branche :
+	\begin{lstlisting}[style=bashstyle]
+git switch prenom-nom
+	\end{lstlisting}
+	Si vous souhaitez lui proposer une modification, repartez de sa branche et créez une branche de proposition :
+	\begin{lstlisting}[style=bashstyle]
+git checkout origin/prenom-collegue
+git checkout -b proposition-prenom-nom
+# Faites vos modifications, puis :
+git add -A
+git commit -m "proposition de modification"
+git push -u origin proposition-prenom-nom
+	\end{lstlisting}
+	Votre collègue peut alors consulter votre proposition sur GitHub dans l'onglet \emph{branches}.
+	
+	\item \textbf{Exercice 4 — Retrouver un commit perdu}
+	
+	Le responsable va introduire une erreur volontaire dans votre fichier et la commiter sur \texttt{main}. Mettez d'abord votre branche à jour :
+	\begin{lstlisting}[style=bashstyle]
+git pull origin main
+git merge main
+	\end{lstlisting}
+	Consultez l'historique pour identifier le commit fautif et le commit sain qui le précède :
+	\begin{lstlisting}[style=bashstyle]
+git log --oneline --graph
+# Appuyez sur "q" pour quitter
+	\end{lstlisting}
+	Vous verrez quelque chose comme :
+	\begin{lstlisting}[style=plainstyle]
+* a3f92c1 (HEAD) erreur introduite par le responsable
+* 7b4e210 votre dernier commit correct
+* ...
+	\end{lstlisting}
+	Pour restaurer un fichier à l'état d'un commit précédent sans toucher au reste :
+	\begin{lstlisting}[style=bashstyle]
+git restore --source 7b4e210 mon-fichier.tex
+git add mon-fichier.tex
+git commit -m "restauration de la version correcte"
+git push
+	\end{lstlisting}
+	\textit{Retenez-le : dans Git, rien n'est jamais vraiment perdu. Tout commit enregistré est récupérable, même longtemps après.}
+\end{enumerate}
 Cet exercice « à blanc » permet de dérouler une fois la procédure complète dans un cadre sans enjeu, avant de l'appliquer sur le vrai projet.
 
 \end{document}
