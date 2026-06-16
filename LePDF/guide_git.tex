@@ -779,15 +779,17 @@ latexdiff ancienne_version.tex nouvelle_version.tex > diff.tex
 	\item Installer Git : \url{https://git-scm.com/downloads}
 	\item Installer Meld : \texttt{sudo apt install meld} (Linux) 
 	ou \url{https://meldmerge.org} (Windows)
-	\item Installer Git LFS (\url{https://git-lfs.com}), 
+	\item Installer Git LFS (\url{https://git-lfs.com}),  \verb|sudo apt update|
+	\verb|sudo apt install git-lfs|
+	
 	puis l'activer dans votre terminal :
 	\texttt{git lfs install}
 	\item Exécuter la configuration initiale (section~2 de ce guide)
 	
 	\item Créez une clef SSH et affichez-la :
 	\begin{lstlisting}[style=bashstyle]
-		ssh-keygen -t ed25519 -C "ton_email@exemple.com"
-		cat ~/.ssh/id_ed25519.pub  % ex: /c/Users/melka/.ssh/id_ed25519.pub
+ssh-keygen -t ed25519 -C "ton_email@exemple.com"
+cat ~/.ssh/id_ed25519.pub  % ex: /c/Users/melka/.ssh/id_ed25519.pub
 	\end{lstlisting}
 	Transmettez-moi la clef affichée pour que je vous autorise à cloner le dépôt.
 
