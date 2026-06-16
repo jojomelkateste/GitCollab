@@ -201,17 +201,37 @@ Lorsque vous faites un \texttt{git pull} toutes les branches sont téléchargée
 
 \subsection*{Sécurité}
 
-La branche main est sécurisé, seul le propriétaire peut la fusionné avec une branche en se connectant à gitHub. La solution est de cloner en mode lecture seule via:
+La branche \texttt{main} est protégée : seul le propriétaire peut y fusionner des modifications, 
+via une \textit{Pull Request} sur GitHub.
+
+Pour consulter la branche d'un collègue \textbf{sans risque d'y écrire accidentellement}, 
+utilisez la procédure suivante :
 
 \begin{lstlisting}[style=bashstyle]
-git fetch origin branche-collegue
-git checkout FETCH_HEAD
-# on passe alors en mode "detached HEAD"
-# en cas dechec verifiez que vous avez bien sauvegarder vos changement sur la branche locale
+	git fetch origin branche-collegue
+	git checkout origin/branche-collegue
+	# Vous etes maintenant en mode "detached HEAD"
+	# Si cette commande echoue, sauvegardez d'abord vos modifications locales
 \end{lstlisting}
 
-En faisant ainsi si on essaye de pusher par accident Git répond :
+En mode \textit{detached HEAD}, toute tentative de \texttt{push} est bloquée par Git : 
+vous ne pouvez pas modifier la branche de votre collègue, même par inadvertance.
 
+Si vous souhaitez proposer des modifications à partir de cette consultation, 
+créez une branche locale depuis cet état :
+
+\begin{lstlisting}[style=bashstyle]
+	git checkout -b ma-proposition
+\end{lstlisting}
+
+Revenez ensuite sur votre branche de travail et fusionnez-y cette proposition :
+
+\begin{lstlisting}[style=bashstyle]
+	git checkout ma-branche
+	git merge ma-proposition
+\end{lstlisting}
+
+Vos collègues peuvent alors consulter vos suggestions sur votre branche. 
 
 \subsection*{Mettre à jour sa branche par rapport au main}
 Avant de demander au responsable de fusionner votre travail dans le \texttt{main}, vous devez vous assurer que votre branche intègre les dernières nouveautés du projet. Pour cela, utilisez cette commande depuis votre branche :
@@ -716,14 +736,16 @@ latexdiff ancienne_version.tex nouvelle_version.tex > diff.tex
 %-------------------------------------------------------------------
 \section{Petit exercice pour la formation}
 
-Crée 
 
 \begin{enumerate}
 \item Crée une clef ssh : \verb|ssh-keygen -t ed25519 -C "ton_email@exemple.com"| regardez la ou est la clef est afficher la. exemple \verb|cat /c/Users/melka/.ssh/id_ed25519.pub| me la transmettre pour vous autoriser à cloner le dépôt. 
 
   \item Aller dans un dossier et cloner le projet \verb|git clone git@github.com:jojomelkateste/GitCollab.git|
   
-  \item Créé vous une branche et travailler dessus pour tout tester. 
+  \item Créé vous une branche avec votre nom et basculer dessus:
+ \verb|git switch -c nom-ma-branch|
+ \item Consulter le dossier \verb|Exercice_collab\Ressources|, j'aurais au préalable crée un fichier latex avec votre nom. Sinon attendez que je le fasse puis faites \verb|git switch main|, \verb|git pull|, \verb|git switch votre-branche|,  \verb|git merge main|.
+ \item Réalisez des modifications dans le fichier latex 
 \end{enumerate}
 
 Cet exercice « à blanc » permet de dérouler une fois la procédure complète dans un cadre sans enjeu, avant de l'appliquer sur le vrai projet.
