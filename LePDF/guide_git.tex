@@ -208,8 +208,8 @@ Pour consulter la branche d'un collègue \textbf{sans risque d'y écrire acciden
 utilisez la procédure suivante :
 
 \begin{lstlisting}[style=bashstyle]
-	git fetch origin branche-collegue
-	git checkout origin/branche-collegue
+git fetch origin branche-collegue
+git checkout FETCH_HEAD
 	# Vous etes maintenant en mode "detached HEAD"
 	# Si cette commande echoue, sauvegardez d'abord vos modifications locales
 \end{lstlisting}
@@ -734,20 +734,87 @@ latexdiff ancienne_version.tex nouvelle_version.tex > diff.tex
 \end{enumerate}
 
 %-------------------------------------------------------------------
-\section{Petit exercice pour la formation}
 
+\section{Exercice collectif}
+\subsection*{Pré-requis : à faire avant la formation}
 
 \begin{enumerate}
-\item Crée une clef ssh : \verb|ssh-keygen -t ed25519 -C "ton_email@exemple.com"| regardez la ou est la clef est afficher la. exemple \verb|cat /c/Users/melka/.ssh/id_ed25519.pub| me la transmettre pour vous autoriser à cloner le dépôt. 
+	\item Installer Git : \url{https://git-scm.com/downloads}
+	\item Installer Meld : \texttt{sudo apt install meld} (Linux) 
+	ou \url{https://meldmerge.org} (Windows)
+	\item Installer Git LFS (\url{https://git-lfs.com}), 
+	puis l'activer dans votre terminal :
+	\texttt{git lfs install}
+	\item Exécuter la configuration initiale (section~2 de ce guide)
+	
+	\item Créez une clef SSH et affichez-la :
+	\begin{lstlisting}[style=bashstyle]
+		ssh-keygen -t ed25519 -C "ton_email@exemple.com"
+		cat ~/.ssh/id_ed25519.pub  % ex: /c/Users/melka/.ssh/id_ed25519.pub
+	\end{lstlisting}
+	Transmettez-moi la clef affichée pour que je vous autorise à cloner le dépôt.
 
-  \item Aller dans un dossier et cloner le projet \verb|git clone git@github.com:jojomelkateste/GitCollab.git|
-  
-  \item Créé vous une branche avec votre nom et basculer dessus:
- \verb|git switch -c nom-ma-branch|
- \item Consulter le dossier \verb|Exercice_collab\Ressources|, j'aurais au préalable crée un fichier latex avec votre nom. Sinon attendez que je le fasse puis faites \verb|git switch main|, \verb|git pull|, \verb|git switch votre-branche|,  \verb|git merge main|.
- \item Réalisez des modifications dans le fichier latex 
 \end{enumerate}
 
+\textit{Un compte GitHub n'est pas nécessaire pour cet exercice. 
+	Si vous souhaitez pouvoir consulter l'interface du dépôt ou 
+	soumettre des Pull Requests par vous-même, créez-en un sur 
+	\url{https://github.com}.}
+\subsection{*exercice}
+Avant de commencer, assurez-vous d'avoir effectué la configuration 
+initiale décrite en section~2 (nom, email, \texttt{pull.rebase}, 
+\texttt{autocrlf}, \texttt{mergetool.keepBackup}).
+
+Le dossier \texttt{Exercice\_collab} contient un fichier \texttt{main.tex} 
+qui assemble les fichiers \LaTeX{} de chaque participant (créés en direct). 
+L'objectif est de simuler un vrai travail collaboratif dans un cadre sans enjeu, 
+afin de dérouler une fois la procédure complète avant de l'appliquer sur le projet réel.
+	
+\begin{enumerate}
+	\item Placez-vous dans le dossier souhaité et clonez le projet :
+	\begin{lstlisting}[style=bashstyle]
+git clone git@github.com:jojomelkateste/GitCollab.git
+	\end{lstlisting}
+	
+	\item Créez votre branche personnelle et basculez dessus :
+	\begin{lstlisting}[style=bashstyle]
+git switch -c prenom-nom
+	\end{lstlisting}
+	
+	\item Consultez le dossier \texttt{Exercice\_collab/Ressources} : j'y aurai au préalable 
+	déposé un fichier \LaTeX{} à votre nom. Si ce n'est pas encore le cas, attendez puis 
+	mettez votre dépôt à jour :
+	\begin{lstlisting}[style=bashstyle]
+git pull origin main
+git merge main
+	\end{lstlisting}
+	
+	\item Réalisez vos modifications dans votre fichier \LaTeX{}, puis sauvegardez-les.
+	Veillez à ne modifier \textbf{aucun autre fichier} :
+	\begin{lstlisting}[style=bashstyle]
+git add -A
+git commit -m "description de mes modifications"
+	\end{lstlisting}
+	
+	\item Publiez votre branche sur le dépôt distant :
+	\begin{lstlisting}[style=bashstyle]
+git push -u origin prenom-nom
+	\end{lstlisting}
+	
+	\item Je récupérerai alors vos contributions et les fusionnerai dans \texttt{main} :
+	\begin{lstlisting}[style=bashstyle]
+git checkout ma-branche
+git fetch origin
+git merge origin/branche-collegue
+	\end{lstlisting}
+	
+	\item Une fois la fusion effectuée, mettez votre branche locale à jour :
+	\begin{lstlisting}[style=bashstyle]
+git pull origin main
+git merge main
+	\end{lstlisting}
+	
+\end{enumerate}
 Cet exercice « à blanc » permet de dérouler une fois la procédure complète dans un cadre sans enjeu, avant de l'appliquer sur le vrai projet.
 
 \end{document}
